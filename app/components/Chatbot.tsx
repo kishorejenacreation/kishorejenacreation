@@ -201,7 +201,7 @@ export default function Chatbot() {
         transition={{ delay: 1 }}
       >
         <ChatBubbleLeftRightIcon className="h-6 w-6 text-white" />
-        <div className="absolute -top-2 -right-2 bg-green-500 text-red text-xs px-2 py-1 rounded-full">LIVE</div>
+        <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">LIVE</div>
       </motion.button>
 
       <AnimatePresence>

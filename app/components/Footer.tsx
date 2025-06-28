@@ -71,7 +71,7 @@ export default function Footer() {
             
             {/* UPI Pay Button */}
             <a
-              href="upi://pay?pa=kishorejenacreation@axl&pn=Kishore%20Jena%20Creation&cu=INR"
+              href="upi://pay?pa=kishorejenacreation@axl&pn=Kishore%20Jena&cu=INR"
               className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-full transition inline-block mb-4"
             >
               Pay with Digital Method
@@ -88,7 +88,7 @@ export default function Footer() {
               />
             </div>
 
-            <p className="text-xs mt-2 text-muted-foreground">Scan the QR using any UPI app</p>
+            <p className="text-xs mt-2 text-muted-foreground">Scan the QR using any UPI app \n Powered By Kishore Jena Creation</p>
           </div>
         </motion.div>
 

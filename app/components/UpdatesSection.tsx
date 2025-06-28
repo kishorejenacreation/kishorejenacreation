@@ -60,7 +60,7 @@ export default function UpdatesSection() {
             title: "Professional Video Editing Services 🎬",
             content:
               "Transform your raw footage into cinematic masterpieces. Our expert team delivers Hollywood-quality results.",
-            media: "/placeholder.svg?height=300&width=500",
+            media: "https://i.postimg.cc/R0H3KwYk/Whats-App-Image-2025-06-28-at-23-56-26-4275df7b.jpg?height=300&width=500",
             likes: 78,
             shares: 23,
             timestamp: new Date(Date.now() - 86400000).toISOString(),

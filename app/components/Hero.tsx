@@ -54,7 +54,7 @@ export default function Hero() {
               <div className="text-2xl">
                 {getGreeting() === "Good Morning" && "🌅"}
                 {getGreeting() === "Good Afternoon" && "☀️"}
-                {getGreeting() === "Good Evening" && "🌆"}
+                {getGreeting() === "Good Evening" && "🌃"}
                 {getGreeting() === "Good Night" && "🌙"}
               </div>
               <div>
@@ -72,7 +72,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <span className="text-gradient">Kishore Jena Creation</span>
+            <span className="text-gradient">KISHORE JENA CREATION</span>
           </motion.h1>
           <motion.p
             className="mt-6 text-lg leading-8 text-muted-foreground"

@@ -12,6 +12,7 @@ interface Message {
   timestamp: Date
   mediaUrl?: string
   mediaDownload?: string
+  fileName?: string
 }
 
 const getRandomResponse = (responses: string[]) => {
@@ -35,11 +36,14 @@ function isSimpleQuery(message: string) {
 function isMediaLink(text: string): { embedUrl: string, downloadUrl: string, fileName: string } | null {
   const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
   const instaMatch = text.match(/(?:https?:\/\/)?(?:www\.)?instagram\.com\/(reel|p)\/([\w-]+)/)
+  const fbMatch = text.match(/(?:https?:\/\/)?(?:www\.)?facebook\.com\/[^\s]+/)
+  const pinterestMatch = text.match(/(?:https?:\/\/)?(?:www\.)?pinterest\.com\/pin\/([\d]+)/)
+  const teraboxMatch = text.match(/(?:https?:\/\/)?(?:www\.)?terabox\.com\/s\/([\w]+)/)
 
   if (ytMatch) {
     return {
       embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}`,
-      downloadUrl: `https://www.youtube.com/watch?v=${ytMatch[1]}`,
+      downloadUrl: `/api/download?url=https://www.youtube.com/watch?v=${ytMatch[1]}&filename=youtube_video_${ytMatch[1]}.mp4`,
       fileName: `youtube_video_${ytMatch[1]}.mp4`
     }
   } else if (instaMatch) {
@@ -47,6 +51,24 @@ function isMediaLink(text: string): { embedUrl: string, downloadUrl: string, fil
       embedUrl: `https://www.instagram.com/${instaMatch[1]}/${instaMatch[2]}/embed/`,
       downloadUrl: `/api/download?url=https://ddinstagram.com/${instaMatch[1]}/${instaMatch[2]}&filename=instagram_video_${instaMatch[2]}.mp4`,
       fileName: `instagram_video_${instaMatch[2]}.mp4`
+    }
+  } else if (fbMatch) {
+    return {
+      embedUrl: fbMatch[0],
+      downloadUrl: `/api/download?url=${encodeURIComponent(fbMatch[0])}&filename=facebook_video.mp4`,
+      fileName: "facebook_video.mp4"
+    }
+  } else if (pinterestMatch) {
+    return {
+      embedUrl: `https://www.pinterest.com/pin/${pinterestMatch[1]}/`,
+      downloadUrl: `/api/download?url=https://pinterest.com/pin/${pinterestMatch[1]}/&filename=pinterest_image.jpg`,
+      fileName: "pinterest_image.jpg"
+    }
+  } else if (teraboxMatch) {
+    return {
+      embedUrl: `https://www.terabox.com/s/${teraboxMatch[1]}`,
+      downloadUrl: `/api/download?url=https://www.terabox.com/s/${teraboxMatch[1]}&filename=terabox_file`,
+      fileName: "terabox_file"
     }
   }
   return null
@@ -117,6 +139,7 @@ export default function Chatbot() {
             timestamp: new Date(),
             mediaUrl: media.embedUrl,
             mediaDownload: media.downloadUrl,
+            fileName: media.fileName,
           },
         ])
         setIsTyping(false)
@@ -208,8 +231,6 @@ export default function Chatbot() {
           </span>
         </div>
       </motion.button>
-
-      {/* Rest of the chat component remains unchanged */}
     </>
   )
 }

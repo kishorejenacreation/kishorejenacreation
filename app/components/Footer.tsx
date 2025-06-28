@@ -88,7 +88,8 @@ export default function Footer() {
               />
             </div>
 
-            <p className="text-xs mt-2 text-muted-foreground">Scan the QR using any UPI app \n Powered By Kishore Jena Creation</p>
+            <p className="text-xs mt-2 text-muted-foreground">Scan the QR using any UPI app</p><br>
+            <p>Powered By Kishore Jena Creation</p>
           </div>
         </motion.div>
 

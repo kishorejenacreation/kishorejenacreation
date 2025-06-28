@@ -26,7 +26,7 @@ const achievements = [
   },
   {
     icon: <TrophyIcon className="h-6 w-6" />,
-    title: "5+ Years Experience",
+    title:"3+ Years Experience",
     description: "Dedicated expertise in digital content creation and editing",
   },
   {
@@ -122,7 +122,7 @@ export default function AboutSection() {
                   transition={{ duration: 0.8, delay: 0.7 }}
                 >
                   Founder & Creative Director
-                  <span className="ml-2 text-xs bg-purple-500/10 text-purple-600 px-2 py-1 rounded-full">
+                  <span className="ml-2 text-xs bgblue-500/10 text-purple-600 px-2 py-1 rounded-full">
                     ✓ Verified Creator
                   </span>
                 </motion.p>
@@ -133,7 +133,7 @@ export default function AboutSection() {
                   transition={{ duration: 0.8, delay: 0.8 }}
                 >
                   <CalendarIcon className="h-4 w-4" />
-                  <span>Founded in 2019 • Based in Odisha, India</span>
+                  <span>Founded in 2021 • Based in Odisha, India</span>
                 </motion.div>
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function AboutSection() {
               transition={{ duration: 0.8, delay: 0.9 }}
             >
               <p>
-                Kishore Jena is a passionate digital content creator and professional editor with over 5 years of
+                Kishore Jena is a passionate digital content creator and professional editor with over 3 years of
                 experience in transforming raw footage and images into compelling visual stories. His journey began with
                 a simple love for photography and evolved into mastering the art of video editing, photo manipulation,
                 and graphic design.
@@ -154,14 +154,11 @@ export default function AboutSection() {
               <p>
                 Specializing in wedding cinematography, commercial video production, and creative photo enhancement,
                 Kishore has built a reputation for delivering exceptional quality work that captures emotions and tells
-                meaningful stories. His expertise spans across industry-standard software including Adobe Creative
-                Suite, DaVinci Resolve, and various professional editing tools.
+                meaningful stories. His expertise spans across industry-standard software including Adobe Premiere Pro, Adobe After Effects, and Adobe Photoshop editing tools.
               </p>
-              <p>
-                Beyond editing, Kishore is also the curator of one of the largest English music collections online,
-                featuring over 50 million songs. His platform serves as a hub for international music lovers, making the
-                best English music accessible to audiences worldwide with seamless YouTube integration.
-              </p>
+                      <p>
+                      He also helps businesses grow by creating impactful promotional content that boosts brand identity and audience engagement.
+                      </p>
               <p>
                 When he's not behind the editing desk, Kishore enjoys exploring new creative techniques, staying updated
                 with the latest industry trends, and mentoring aspiring content creators in his community.

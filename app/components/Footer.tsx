@@ -80,7 +80,7 @@ export default function Footer() {
             {/* QR Code Image */}
             <div className="flex justify-center mt-2">
               <Image
-                src="/qr/kishore-upi-qr.png" // 🟡 Replace with your actual QR image path
+                src="https://i.postimg.cc/Gt8s5cy8/Screenshot-2025-02-01-192815.png" // 🟡 Replace with your actual QR image path
                 alt="Scan to Pay"
                 width={150}
                 height={150}

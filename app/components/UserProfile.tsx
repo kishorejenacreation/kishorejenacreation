@@ -67,7 +67,7 @@ export default function UserProfile() {
               },
             ],
             stats: {
-              following: false,
+              //following: false,
               postsLiked: 0,
               chatMessages: 0,
               projectsSubmitted: 0,

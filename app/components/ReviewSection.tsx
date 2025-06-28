@@ -23,7 +23,7 @@ const formSchema = z.object({
 const allReviews = [
   {
     id: 1,
-    name: "Priya Sharma",
+    name: "Priya Das",
     rating: 5,
     review:
       "Excellent video editing service! My wedding video turned out amazing. Kishore bhai did fantastic work. Highly recommended!",
@@ -41,7 +41,7 @@ const allReviews = [
   },
   {
     id: 3,
-    name: "Sneha Patel",
+    name: "Sneha M",
     rating: 4,
     review:
       "Great thumbnail designs for my YouTube channel. Increased my click-through rate significantly! Worth every rupee spent.",
@@ -59,8 +59,8 @@ const allReviews = [
   },
   {
     id: 5,
-    name: "Kavya Reddy",
-    rating: 5,
+    name: "Kavya Rath",
+    rating: 3,
     review:
       "Amazing music platform! Love the collection of English songs, especially the latest hits. Great for my morning workouts.",
     date: "2024-01-18",
@@ -68,7 +68,7 @@ const allReviews = [
   },
   {
     id: 6,
-    name: "Vikram Gupta",
+    name: "Vikram Senapati",
     rating: 4,
     review:
       "Quick turnaround time for logo design. Very professional service and great communication. Will definitely work again.",
@@ -77,7 +77,7 @@ const allReviews = [
   },
   {
     id: 7,
-    name: "Ananya Joshi",
+    name: "Ananya Singh",
     rating: 5,
     review:
       "Fantastic audio editing for my podcast. The sound quality improved dramatically! Kishore ji knows his work very well.",
@@ -86,7 +86,7 @@ const allReviews = [
   },
   {
     id: 8,
-    name: "Rohit Agarwal",
+    name: "Rohit Kumar",
     rating: 5,
     review:
       "Outstanding work on my product photography. The edited images look absolutely professional. Boosted my online sales!",
@@ -95,7 +95,7 @@ const allReviews = [
   },
   {
     id: 9,
-    name: "Meera Nair",
+    name: "Meera Ghosh",
     rating: 4,
     review:
       "Love the user interface of the music platform. Easy to search and find my favorite English songs. Very user-friendly design.",
@@ -104,33 +104,6 @@ const allReviews = [
   },
   {
     id: 10,
-    name: "Karan Malhotra",
-    rating: 5,
-    review:
-      "Excellent video editing for my travel vlog. The transitions and effects were perfect! My subscribers loved the new quality.",
-    date: "2024-01-28",
-    service: "Video Editing",
-  },
-  {
-    id: 11,
-    name: "Riya Bansal",
-    rating: 5,
-    review:
-      "Beautiful thumbnail designs that really stand out. My video views increased by 300%! Best investment for my YouTube channel.",
-    date: "2024-01-30",
-    service: "Thumbnail Design",
-  },
-  {
-    id: 12,
-    name: "Amit Verma",
-    rating: 4,
-    review:
-      "Great collection of romantic English songs. Perfect for my wedding playlist preparation. Found all the songs I was looking for.",
-    date: "2024-02-02",
-    service: "Music Platform",
-  },
-  {
-    id: 13,
     name: "Pooja Mishra",
     rating: 5,
     review:
@@ -139,67 +112,13 @@ const allReviews = [
     service: "Wedding Invitations",
   },
   {
-    id: 14,
-    name: "Sanjay Yadav",
+    id: 11,
+    name: "Sanjay Rout",
     rating: 5,
     review:
       "Superb photo editing for our family function photos. Made everyone look their best! Very reasonable pricing too.",
     date: "2024-02-08",
     service: "Photo Editing",
-  },
-  {
-    id: 15,
-    name: "Divya Iyer",
-    rating: 4,
-    review:
-      "Good music collection and easy to use platform. Love listening to English pop songs during my study sessions. Keeps me motivated.",
-    date: "2024-02-10",
-    service: "Music Platform",
-  },
-  {
-    id: 16,
-    name: "Rahul Saxena",
-    rating: 5,
-    review:
-      "Amazing video editing for our startup's promotional video. Professional quality work that helped us get more clients. Highly recommend!",
-    date: "2024-02-12",
-    service: "Video Editing",
-  },
-  {
-    id: 17,
-    name: "Shreya Kapoor",
-    rating: 5,
-    review:
-      "Excellent graphic design work for our restaurant menu. Creative and eye-catching designs that attracted more customers. Great job!",
-    date: "2024-02-15",
-    service: "Graphic Design",
-  },
-  {
-    id: 18,
-    name: "Nikhil Jain",
-    rating: 4,
-    review:
-      "Professional audio editing for our company podcast. Clear sound quality and perfect background music integration. Very satisfied.",
-    date: "2024-02-18",
-    service: "Audio Editing",
-  },
-  {
-    id: 19,
-    name: "Aditi Bhatt",
-    rating: 5,
-    review:
-      "Beautiful wedding invitation design with perfect blend of traditional and modern elements. All our guests loved the design!",
-    date: "2024-02-20",
-    service: "Wedding Invitations",
-  },
-  {
-    id: 20,
-    name: "Varun Chopra",
-    rating: 5,
-    review:
-      "Outstanding thumbnail designs for my tech YouTube channel. Professional look that increased my subscriber count significantly!",
-    date: "2024-02-22",
-    service: "Thumbnail Design",
   },
 ]
 
@@ -247,7 +166,7 @@ export default function ReviewSection() {
       alert("Thank you for your review! We appreciate your feedback.")
       form.reset()
       setRating(0)
-      setIsSubmitting(false)
+      setIsSubmitting(true)
     }, 2000)
   }
 

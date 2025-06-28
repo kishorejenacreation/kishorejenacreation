@@ -11,48 +11,57 @@ interface Message {
   isBot: boolean
   timestamp: Date
   mediaUrl?: string
+  mediaDownload?: string
 }
 
 const getRandomResponse = (responses: string[]) => {
   return responses[Math.floor(Math.random() * responses.length)]
 }
 
-const createPlayer = (videoId: string) => {
-  window.open(`https://www.youtube.com/watch?v=${videoId}`, "_blank")
-}
-
-const playSong = (song: any) => {
-  window.open(`https://www.youtube.com/watch?v=${song.youtubeId}`, "_blank")
-}
-
 function isSimpleQuery(message: string) {
   const lower = message.toLowerCase()
-
   if (lower.includes("today") && lower.includes("date")) {
     return new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
   }
-
   if (lower.includes("time")) {
     return new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
   }
-
   if (lower.includes("your name")) {
     return "I’m CAYA, your AI assistant from Kishore Jena Creation!"
   }
-
+  if (lower.includes("instagram video download")) {
+    return "click the link an paste your link to download media !! ENJOY🎉🍾😊 !! \n https://savegram.app/en/instagram-video-downloader"
+  }
+  if (lower.includes("youtube video download")) {
+    return "click the link an paste your link to download media !! ENJOY🎉🍾😊 !! \n https://snapany.com/youtube"
+  }
+  if (lower.includes("facebook video download")) {
+    return "click the link an paste your link to download media !! ENJOY🎉🍾😊 !! \n https://snapany.com/facebook"
+  }
+  if (lower.includes("pint")) {
+    return "click the link an paste your link to download media !! ENJOY🎉🍾😊 !! \n\n https://snapany.com/pinterest"
+  }
+  if (lower.includes("threads video download")) {
+    return "click the link an paste your link to download media !! ENJOY🎉🍾😊 !! \n https://snapany.com/threads"
+  }
   return null
 }
 
-function isMediaLink(text: string): string | null {
+function isMediaLink(text: string): { embedUrl: string, downloadUrl: string } | null {
   const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
   const instaMatch = text.match(/(?:https?:\/\/)?(?:www\.)?instagram\.com\/(reel|p)\/([\w-]+)/)
 
   if (ytMatch) {
-    return `https://www.youtube.com/embed/${ytMatch[1]}`
+    return {
+      embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}`,
+      downloadUrl: `https://www.youtube.com/watch?v=${ytMatch[1]}`
+    }
   } else if (instaMatch) {
-    return `https://www.instagram.com/${instaMatch[1]}/${instaMatch[2]}/embed/`
+    return {
+      embedUrl: `https://www.instagram.com/${instaMatch[1]}/${instaMatch[2]}/embed/`,
+      downloadUrl: `https://ddinstagram.com/${instaMatch[1]}/${instaMatch[2]}` // using ddinstagram proxy for download
+    }
   }
-
   return null
 }
 
@@ -84,7 +93,7 @@ export default function Chatbot() {
   const handleSendMessage = async () => {
     if (!inputText.trim()) return
 
-    const mediaUrl = isMediaLink(inputText)
+    const media = isMediaLink(inputText)
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -97,7 +106,7 @@ export default function Chatbot() {
     setInputText("")
     setIsTyping(true)
 
-    if (mediaUrl) {
+    if (media) {
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
@@ -106,7 +115,8 @@ export default function Chatbot() {
             text: "Here is your media preview. You can download or share it:",
             isBot: true,
             timestamp: new Date(),
-            mediaUrl,
+            mediaUrl: media.embedUrl,
+            mediaDownload: media.downloadUrl,
           },
         ])
         setIsTyping(false)
@@ -169,7 +179,6 @@ export default function Chatbot() {
         },
       ])
     }
-
     setIsTyping(false)
   }
 
@@ -182,7 +191,6 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Chat Button */}
       <motion.button
         className="fixed bottom-6 left-6 bg-primary text-primary-foreground rounded-full p-4 shadow-lg z-40 hover:bg-primary/90 transition-colors"
         onClick={() => setIsOpen(true)}
@@ -196,7 +204,6 @@ export default function Chatbot() {
         <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">LIVE</div>
       </motion.button>
 
-      {/* Chatbox */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -239,7 +246,7 @@ export default function Chatbot() {
                         ></iframe>
                         <div className="flex gap-2">
                           <a
-                            href={message.mediaUrl.replace("/embed/", "/watch?v=")}
+                            href={message.mediaDownload || message.mediaUrl}
                             target="_blank"
                             className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                             download

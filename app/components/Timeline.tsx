@@ -5,35 +5,35 @@ import { motion, useScroll, useTransform, useSpring, useInView } from "framer-mo
 
 const timelineEvents = [
   {
-    year: 2020,
+    year: 2021,
     title: "Kishore Jena Creation Founded",
     description: "Our journey began with a passion for innovative design and digital creativity.",
     details:
       "Founded by Kishore Jena, the studio started with a vision to create meaningful digital experiences that bridge creativity and technology.",
   },
   {
-    year: 2021,
+    year: 2023,
     title: "First Major Client Success",
     description: "Delivered breakthrough design solutions for leading brands in the region.",
     details:
       "Our innovative approach to brand identity and digital design attracted attention from major clients, establishing our reputation in the creative industry.",
   },
   {
-    year: 2022,
+    year: 2024,
     title: "Digital Innovation Award",
     description: "Recognized for excellence in digital design and user experience.",
     details:
       "Our portfolio of work earned recognition at the Regional Design Awards, highlighting our commitment to pushing creative boundaries.",
   },
   {
-    year: 2023,
+    year: 2024,
     title: "Team Expansion",
     description: "Grew our creative team to meet increasing demand for our services.",
     details:
       "Added talented designers, developers, and strategists to our team, enabling us to take on larger and more complex projects.",
   },
   {
-    year: 2024,
+    year: 2025,
     title: "International Recognition",
     description: "Expanded our reach with clients across multiple countries.",
     details:

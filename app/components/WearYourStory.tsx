@@ -95,6 +95,7 @@ export default function WearYourStory() {
     "Video Editing",
     "Photo Editing",
     "Thumbnail Design",
+    "Promotional Video",
     "Wedding Invitations",
     "Graphic Design",
     "Audio Editing",

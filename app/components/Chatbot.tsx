@@ -66,7 +66,7 @@ function getBotReplyOrMedia(input: string):
       type: "media",
       platform: "Instagram",
       embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
-      downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
+      mediaDownload: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
     };
   }
 

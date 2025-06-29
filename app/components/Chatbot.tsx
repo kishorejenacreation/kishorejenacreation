@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { PaperAirplaneIcon } from "@heroicons/react/24/outline"
+import { PaperAirplaneIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline"
 import { useAuth } from "./AuthProvider"
 
 interface Message {
@@ -42,14 +42,12 @@ function getBotReplyOrMedia(input: string):
     };
   }
 
-  const instaMatch = input.match(/(?:www\.)?instagram\.com\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/);
+  const instaMatch = url.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/);
   if (instaMatch) {
-    const id = instaMatch[1];
+    const code = instaMatch[1];
     return {
-      type: "media",
       platform: "Instagram",
-      embedUrl: `https://www.instagram.com/reel/${id}/embed`,
-      downloadUrl: `https://snapsave.app/instagram?url=https://www.instagram.com/reel/${id}`,
+      downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
     };
   }
 
@@ -60,19 +58,22 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState("")
   const [isTyping, setIsTyping] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const { user } = useAuth()
 
   useEffect(() => {
-    setMessages([
-      {
-        id: Date.now().toString(),
-        text: "Hello! I'm CAYA, your 24/7 assistant from Kishore Jena Creation. How can I help you today?",
-        isBot: true,
-        timestamp: new Date(),
-      },
-    ])
-  }, [])
+    if (isOpen && messages.length === 0) {
+      setMessages([
+        {
+          id: Date.now().toString(),
+          text: "Hello! I'm CAYA, your 24/7 assistant from Kishore Jena Creation. How can I help you today?",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    }
+  }, [isOpen])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -145,7 +146,7 @@ export default function Chatbot() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer YOUR_REAL_OPENAI_API_KEY`,
+          Authorization: `Bearer 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`,
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -190,48 +191,61 @@ export default function Chatbot() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 w-96 bg-white border rounded-xl shadow-lg p-4">
-      <div className="h-96 overflow-y-auto space-y-2 mb-4">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`text-sm p-2 rounded-md ${msg.isBot ? 'bg-gray-100 text-black' : 'bg-blue-600 text-white text-right'}`}>
-            {msg.text}
-            {msg.mediaUrl && (
-              <div className="mt-2">
-                <iframe src={msg.mediaUrl} className="w-full aspect-video rounded border" allow="autoplay; encrypted-media" allowFullScreen></iframe>
-                <a href={msg.mediaDownload || msg.mediaUrl} target="_blank" className="text-xs text-blue-600 underline">Download</a>
-              </div>
-            )}
-            <div className="text-[10px] text-gray-500 mt-1">
-              {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </div>
-          </div>
-        ))}
-        {isTyping && <div className="text-gray-400">CAYA is typing...</div>}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <input
-          type="text"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-          placeholder="Type a message..."
-          className="flex-1 px-3 py-2 border rounded-full text-sm"
-        />
-        <button onClick={handleSendMessage} className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
-          <PaperAirplaneIcon className="h-4 w-4" />
-        </button>
-      </div>
-
-      <div className="text-center mt-2">
+    <>
+      {!isOpen && (
         <button
-          className="text-xs text-blue-600 underline"
-          onClick={handleContactAdmin}
+          className="fixed bottom-6 left-6 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700"
+          onClick={() => setIsOpen(true)}
         >
-          📧 Contact Admin (Kishore)
+          <ChatBubbleLeftRightIcon className="w-6 h-6" />
         </button>
-      </div>
-    </div>
+      )}
+
+      {isOpen && (
+        <div className="fixed bottom-4 left-4 w-96 bg-white border rounded-xl shadow-lg p-4 z-50">
+          <div className="h-96 overflow-y-auto space-y-2 mb-4">
+            {messages.map((msg) => (
+              <div key={msg.id} className={`text-sm p-2 rounded-md ${msg.isBot ? 'bg-gray-100 text-black' : 'bg-blue-600 text-white text-right'}`}>
+                {msg.text}
+                {msg.mediaUrl && (
+                  <div className="mt-2">
+                    <iframe src={msg.mediaUrl} className="w-full aspect-video rounded border" allow="autoplay; encrypted-media" allowFullScreen></iframe>
+                    <a href={msg.mediaDownload || msg.mediaUrl} target="_blank" className="text-xs text-blue-600 underline">Download</a>
+                  </div>
+                )}
+                <div className="text-[10px] text-gray-500 mt-1">
+                  {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              </div>
+            ))}
+            {isTyping && <div className="text-gray-400">CAYA is typing...</div>}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type a message..."
+              className="flex-1 px-3 py-2 border rounded-full text-sm"
+            />
+            <button onClick={handleSendMessage} className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+              <PaperAirplaneIcon className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="text-center mt-2">
+            <button
+              className="text-xs text-blue-600 underline"
+              onClick={handleContactAdmin}
+            >
+              📧 Contact Admin (Kishore)
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

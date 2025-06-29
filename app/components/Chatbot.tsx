@@ -14,21 +14,38 @@ interface Message {
 }
 
 function getBotReplyOrMedia(input: string):
-  | { type: "media", platform: string, embedUrl: string, downloadUrl: string }
-  | { type: "text", reply: string }
+  | { type: "media"; platform: string; embedUrl: string; downloadUrl: string }
+  | { type: "text"; reply: string }
   | null {
+  
   const message = input.toLowerCase().trim();
 
   if (message.includes("today") && message.includes("date")) {
-    return { type: "text", reply: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) };
+    return {
+      type: "text",
+      reply: new Date().toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+    };
   }
 
   if (message.includes("time")) {
-    return { type: "text", reply: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }) };
+    return {
+      type: "text",
+      reply: new Date().toLocaleTimeString("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
   }
 
   if (message.includes("your name")) {
-    return { type: "text", reply: "I’m CAYA, your AI assistant from Kishore Jena Creation!" };
+    return {
+      type: "text",
+      reply: "I’m CAYA, your AI assistant from Kishore Jena Creation!",
+    };
   }
 
   const ytMatch = input.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([^?&\n]+)/);
@@ -42,20 +59,20 @@ function getBotReplyOrMedia(input: string):
     };
   }
 
-  const instaMatch = url.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/);
-if (instaMatch) {
-  const code = instaMatch[1];
-  return {
-    type: "media",
-    platform: "Instagram",
-    embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
-    downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
-  };
-}
-
+  const instaMatch = input.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/);
+  if (instaMatch) {
+    const code = instaMatch[1];
+    return {
+      type: "media",
+      platform: "Instagram",
+      embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
+      downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
+    };
+  }
 
   return null;
 }
+
 
 export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([])

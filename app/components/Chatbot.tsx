@@ -1,60 +1,100 @@
-// ✅ Combined and Fixed version of 1st and 2nd code
+"use client"
 
-"use client";
-
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ChatBubbleLeftRightIcon,
-  XMarkIcon,
-  PaperAirplaneIcon,
-  EnvelopeIcon,
-} from "@heroicons/react/24/outline";
-import { useAuth } from "./AuthProvider"; // make sure AuthProvider exists
+import { useState, useRef, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ChatBubbleLeftRightIcon, XMarkIcon, PaperAirplaneIcon, EnvelopeIcon } from "@heroicons/react/24/outline"
+import { useAuth } from "./AuthProvider"
 
 interface Message {
-  id: string;
-  text: string;
-  isBot: boolean;
-  timestamp: Date;
-  mediaUrl?: string;
-  mediaDownload?: string;
+  id: string
+  text: string
+  isBot: boolean
+  timestamp: Date
+  mediaUrl?: string
+  mediaDownload?: string
 }
 
-function isSimpleQuery(message: string) {
-  const lower = message.toLowerCase();
-  if (lower.includes("today") && lower.includes("date")) {
-    return new Date().toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }
-  if (lower.includes("time")) {
-    return new Date().toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-  if (lower.includes("your name")) {
-    return "I’m CAYA, your AI assistant from Kishore Jena Creation!";
-  }
-  
-  return null;
+const getRandomResponse = (responses: string[]) => {
+  return responses[Math.floor(Math.random() * responses.length)]
 }
 
-function isMediaLink(url: string): { embedUrl: string; downloadUrl: string; platform: string } | null {
-  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)\b|youtu\.be\/)([^?&\n]+)/);
-  const instaMatch = url.match(/instagram\.com\/(reel|p|tv)\/([^/?#]+)/);
-  const fbMatch = url.match(/facebook\.com\/.*\/videos\/(\d+)/);
-  const teraboxMatch = url.match(/terabox\.com\/s\/([a-zA-Z0-9]+)/);
-  const snapMatch = url.match(/snapchat\.com\/add\/([a-zA-Z0-9._]+)/);
-  const pinMatch = url.match(/pinterest\.com\/pin\/(\d+)/);
-  const threadsMatch = url.match(/threads\.net\/@[^\/]+\/post\/(\d+)/);
+function getBotReplyOrMedia(input: string): 
+  | { type: "media", platform: string, embedUrl: string, downloadUrl: string }
+  | { type: "text", reply: string }
+  | null {
+
+  const message = input.toLowerCase().trim();
+
+  // Simple queries
+  if (message.includes("today") && message.includes("date")) {
+    return {
+      type: "text",
+      reply: new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }),
+    };
+  }
+
+  if (message.includes("time")) {
+    return {
+      type: "text",
+      reply: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
+    };
+  }
+
+  if (message.includes("your name")) {
+    return {
+      type: "text",
+      reply: "I’m CAYA, your AI assistant from Kishore Jena Creation!",
+    };
+  }
+
+  if (message.includes("instagram") || message.includes("insta")) {
+    return {
+      type: "text",
+      reply: "Click to download Instagram media:\nhttps://savegram.app/en/instagram-video-downloader",
+    };
+  }
+
+  if (message.includes("youtube") || message.includes("you")) {
+    return {
+      type: "text",
+      reply: "Click to download YouTube media:\nhttps://snapany.com/youtube",
+    };
+  }
+
+  if (message.includes("facebook") || message.includes("face")) {
+    return {
+      type: "text",
+      reply: "Click to download Facebook media:\nhttps://snapany.com/facebook",
+    };
+  }
+
+  if (message.includes("pinterest") || message.includes("pint")) {
+    return {
+      type: "text",
+      reply: "Click to download Pinterest media:\nhttps://snapany.com/pinterest",
+    };
+  }
+
+  if (message.includes("threads") || message.includes("thread")) {
+    return {
+      type: "text",
+      reply: "Click to download Threads media:\nhttps://snapany.com/threads",
+    };
+  }
+
+  // Media links
+  const ytMatch = input.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([^?&\n]+)/);
+  const instaMatch = input.match(/instagram\.com\/(?:reel|p|tv)\/([^/?#]+)/);
+  const fbMatch = input.match(/facebook\.com\/(?:.*\/videos\/|video\.php\?v=|watch\/?\?v=)(\d+)/);
+  const teraboxMatch = input.match(/terabox(?:app)?\.com\/s\/([\w]+)/);
+  const snapMatch = input.match(/snapchat\.com\/add\/([\w.-]+)/);
+  const pinMatch = input.match(/pinterest\.com\/pin\/(\d+)/);
+  const threadsMatch = input.match(/threads\.net\/@[^/]+\/post\/(\d+)/);
 
   if (ytMatch) {
     const id = ytMatch[1];
     return {
+      type: "media",
       platform: "YouTube",
       embedUrl: `https://www.youtube.com/embed/${id}`,
       downloadUrl: `https://www.y2mate.com/youtube/${id}`,
@@ -62,24 +102,28 @@ function isMediaLink(url: string): { embedUrl: string; downloadUrl: string; plat
   }
 
   if (instaMatch) {
+    const id = instaMatch[1];
     return {
+      type: "media",
       platform: "Instagram",
-      embedUrl: `https://www.instagram.com/${instaMatch[1]}/${instaMatch[2]}/embed/`,
-      downloadUrl: `https://ddinstagram.com/${instaMatch[1]}/${instaMatch[2]}`,
+      embedUrl: `https://www.instagram.com/reel/${id}/embed/`,
+      downloadUrl: `https://ddinstagram.com/reel/${id}`,
     };
   }
 
   if (fbMatch) {
-    const videoId = fbMatch[1];
+    const id = fbMatch[1];
     return {
+      type: "media",
       platform: "Facebook",
-      embedUrl: `https://www.facebook.com/video/embed?video_id=${videoId}`,
+      embedUrl: `https://www.facebook.com/video/embed?video_id=${id}`,
       downloadUrl: `https://fdown.net/`,
     };
   }
 
   if (teraboxMatch) {
     return {
+      type: "media",
       platform: "Terabox",
       embedUrl: "",
       downloadUrl: `https://teraboxapp.com/s/${teraboxMatch[1]}`,
@@ -88,29 +132,283 @@ function isMediaLink(url: string): { embedUrl: string; downloadUrl: string; plat
 
   if (snapMatch) {
     return {
+      type: "media",
       platform: "Snapchat",
       embedUrl: "",
-      downloadUrl: `https://snapsave.app/`,
+      downloadUrl: `https://snapsave.app/snapchat?url=https://www.snapchat.com/add/${snapMatch[1]}`,
     };
   }
 
   if (pinMatch) {
     return {
+      type: "media",
       platform: "Pinterest",
       embedUrl: "",
-      downloadUrl: `https://pinterestvideodownloader.com/`,
+      downloadUrl: `https://pinterestvideodownloader.com/?url=https://www.pinterest.com/pin/${pinMatch[1]}/`,
     };
   }
 
   if (threadsMatch) {
     return {
+      type: "media",
       platform: "Threads",
       embedUrl: "",
-      downloadUrl: `https://snapsave.app/threads`,
+      downloadUrl: `https://snapsave.app/threads?url=https://www.threads.net/@user/post/${threadsMatch[1]}`,
     };
   }
 
   return null;
 }
 
-export { isSimpleQuery, isMediaLink };
+
+export default function Chatbot() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [inputText, setInputText] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (isOpen && messages.length === 0) {
+      setMessages([
+        {
+          id: Date.now().toString(),
+          text: "Hello! I'm CAYA, your 24/7 assistant from Kishore Jena Creation. How can I help you today?",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
+
+  const handleSendMessage = async () => {
+    if (!inputText.trim()) return
+
+    const media = isMediaLink(inputText)
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: inputText,
+      isBot: false,
+      timestamp: new Date(),
+    }
+
+    setMessages((prev) => [...prev, userMessage])
+    setInputText("")
+    setIsTyping(true)
+
+    if (media) {
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            text: "Here is your media preview. You can download or share it:",
+            isBot: true,
+            timestamp: new Date(),
+            mediaUrl: media.embedUrl,
+            mediaDownload: media.downloadUrl,
+          },
+        ])
+        setIsTyping(false)
+      }, 1000)
+      return
+    }
+
+    const simpleAnswer = isSimpleQuery(inputText)
+    if (simpleAnswer) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: simpleAnswer,
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+      setIsTyping(false)
+      return
+    }
+
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer YOUR_OPENAI_API_KEY`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are CAYA, a helpful assistant for Kishore Jena Creation. Respond accurately and helpfully." },
+            { role: "user", content: inputText },
+          ],
+        }),
+      })
+
+      const data = await res.json()
+      const botReply = data.choices[0].message.content
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: botReply,
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    } catch (error) {
+      console.error("AI Chat Error:", error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: "Sorry, I’m having trouble responding right now. Please try again later.",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    }
+    setIsTyping(false)
+  }
+
+  const handleContactAdmin = () => {
+    const subject = "Chat Support Request"
+    const body = `Hello Kishore,\n\nI was chatting with CAYA and need to speak with you directly.\n\nChat History:\n${messages.map((msg) => `${msg.isBot ? "CAYA" : "User"}: ${msg.text}`).join("\n")}\n\nBest regards,\n${user?.email || "Website Visitor"}`
+    const mailtoLink = `mailto:jenakishore2006@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+    window.open(mailtoLink, "_blank")
+  }
+
+  return (
+    <>
+      <motion.button
+        className="fixed bottom-6 left-6 bg-primary text-primary-foreground rounded-full p-4 shadow-lg z-40 hover:bg-primary/90 transition-colors"
+        onClick={() => setIsOpen(true)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <ChatBubbleLeftRightIcon className="h-6 w-6 text-white" />
+        <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">LIVE</div>
+      </motion.button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="fixed bottom-6 left-6 w-96 h-[500px] bg-background border border-border rounded-2xl shadow-xl z-50 flex flex-col overflow-hidden"
+            initial={{ opacity: 0, scale: 0.8, y: 100 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 100 }}
+          >
+            <div className="bg-primary text-primary-foreground p-4 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <span className="text-lg font-bold">C</span>
+                </div>
+                <div>
+                  <h3 className="font-semibold">CAYA</h3>
+                  <p className="text-xs opacity-90">AI Assistant • Online 24/7</p>
+                </div>
+              </div>
+              <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white">
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {messages.map((message) => (
+                <div key={message.id} className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}>
+                  <div
+                    className={`max-w-[80%] p-3 rounded-2xl ${
+                      message.isBot ? "bg-secondary/20 text-foreground" : "bg-primary text-primary-foreground ml-auto"
+                    }`}
+                  >
+                    <p className="text-sm whitespace-pre-line">{message.text}</p>
+                    {message.mediaUrl && (
+                      <div className="mt-2 space-y-2">
+                        <iframe
+                          src={message.mediaUrl}
+                          className="w-full aspect-video rounded-md border"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        ></iframe>
+                        <div className="flex gap-2">
+                          <a
+                            href={message.mediaDownload || message.mediaUrl}
+                            target="_blank"
+                            className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                            download
+                          >
+                            Download
+                          </a>
+                          <a
+                            href={`https://wa.me/?text=${encodeURIComponent(message.mediaUrl)}`}
+                            target="_blank"
+                            className="text-xs bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                          >
+                            Share
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                    <p className="text-xs opacity-70 mt-1">
+                      {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-secondary/20 text-foreground p-3 rounded-2xl">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="p-4 border-t border-border">
+              <div className="flex gap-2 mb-2">
+                <button
+                  onClick={handleContactAdmin}
+                  className="text-xs bg-orange-100 text-orange-600 px-3 py-1 rounded-full hover:bg-orange-200 transition-colors flex items-center gap-1"
+                >
+                  <EnvelopeIcon className="h-3 w-3" />
+                  Contact Admin
+                </button>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                  placeholder="Type your message..."
+                  className="flex-1 px-3 py-2 border border-border rounded-full bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  className="bg-primary text-primary-foreground rounded-full p-2 hover:bg-primary/90 transition-colors"
+                >
+                  <PaperAirplaneIcon className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}

@@ -42,6 +42,17 @@ function getBotReplyOrMedia(input: string):
     };
   }
 
+  const instaMatch = input.match(/(?:www\.)?instagram\.com\/(?:reel|p|tv)\/([a-zA-Z0-9_-]+)/);
+  if (instaMatch) {
+    const id = instaMatch[1];
+    return {
+      type: "media",
+      platform: "Instagram",
+      embedUrl: `https://www.instagram.com/reel/${id}/embed`,
+      downloadUrl: `https://snapsave.app/instagram?url=https://www.instagram.com/reel/${id}`,
+    };
+  }
+
   return null;
 }
 
@@ -66,6 +77,15 @@ export default function Chatbot() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
+
+  const handleContactAdmin = () => {
+    const subject = "CAYA Chatbot Issue - User Report"
+    const body = `Hello Kishore,\n\nI'm facing an issue with the chatbot.\n\nChat History:\n${messages.map(
+      (msg) => `${msg.isBot ? "CAYA" : "User"}: ${msg.text}`
+    ).join("\n")}\n\nPlease look into it.\n\nThanks,\n${user?.email || "Website Visitor"}`
+
+    window.open(`mailto:jenakishore2006@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, "_blank")
+  }
 
   const handleSendMessage = async () => {
     if (!inputText.trim()) {
@@ -125,7 +145,7 @@ export default function Chatbot() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`, // INSERT YOUR KEY HERE
+          Authorization: `Bearer YOUR_REAL_OPENAI_API_KEY`,
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -154,11 +174,17 @@ export default function Chatbot() {
         ...prev,
         {
           id: (Date.now() + 1).toString(),
-          text: "❌ Sorry, I’m having trouble responding right now.",
+          text: "❌ Sorry, I’m having trouble responding right now. You can contact admin below 👇",
           isBot: true,
           timestamp: new Date(),
         },
       ])
+      setTimeout(() => {
+        const confirmContact = confirm("Chatbot failed. Do you want to contact Kishore Jena (Admin)?");
+        if (confirmContact) {
+          handleContactAdmin();
+        }
+      }, 500)
     }
     setIsTyping(false)
   }
@@ -195,6 +221,15 @@ export default function Chatbot() {
         />
         <button onClick={handleSendMessage} className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
           <PaperAirplaneIcon className="h-4 w-4" />
+        </button>
+      </div>
+
+      <div className="text-center mt-2">
+        <button
+          className="text-xs text-blue-600 underline"
+          onClick={handleContactAdmin}
+        >
+          📧 Contact Admin (Kishore)
         </button>
       </div>
     </div>

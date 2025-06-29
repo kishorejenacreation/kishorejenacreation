@@ -1,134 +1,132 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { CameraIcon } from "@heroicons/react/24/outline"
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import Image from "next/image"
+import DualCameraWithFilters from "./DualCameraWithFilters"
 
-export default function DualCameraWithFilters() {
-  const [image, setImage] = useState<string | null>(null)
-  const [filter, setFilter] = useState<string>("none")
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+export default function Footer() {
+  const [currentTime, setCurrentTime] = useState(new Date())
 
-  const startCamera = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" }, // "environment" for back cam
-      audio: false,
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const formatDateTime = (date: Date) => {
+    const timeString = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
     })
-    if (videoRef.current) {
-      videoRef.current.srcObject = stream
-    }
+
+    const dateString = date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+
+    return { timeString, dateString }
   }
 
-  const takePhoto = () => {
-    if (!videoRef.current || !canvasRef.current) return
-    const context = canvasRef.current.getContext("2d")
-    if (!context) return
-
-    const width = videoRef.current.videoWidth
-    const height = videoRef.current.videoHeight
-
-    canvasRef.current.width = width
-    canvasRef.current.height = height
-
-    context.filter = filter
-    context.drawImage(videoRef.current, 0, 0, width, height)
-
-    const dataUrl = canvasRef.current.toDataURL("image/png")
-    setImage(dataUrl)
+  const getTimeZone = () => {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
   }
 
-  const saveImage = () => {
-    if (!image) return
-    const a = document.createElement("a")
-    a.href = image
-    a.download = "selfie.png"
-    a.click()
-  }
-
-  const reset = () => {
-    setImage(null)
-    setFilter("none")
-  }
-
-  const filters = [
-    "none",
-    "grayscale(1)",
-    "sepia(1)",
-    "blur(2px)",
-    "contrast(1.5)",
-    "brightness(1.2)",
-    "saturate(2)",
-  ]
+  const { timeString, dateString } = formatDateTime(currentTime)
 
   return (
-    <div className="text-center space-y-4">
-      {!image ? (
-        <>
-          <video
-            ref={videoRef}
-            className="rounded-xl mx-auto border shadow-md"
-            style={{ filter }}
-            autoPlay
-            playsInline
-            width={300}
-            height={225}
-          />
+    <footer className="bg-background border-t border-border">
+      <div className="mx-auto max-w-7xl overflow-hidden px-6 py-20 sm:py-24 lg:px-8">
 
-          {/* 🎨 Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-2 mt-2">
-            {filters.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className="bg-gray-200 px-3 py-1 rounded-full text-sm hover:bg-gray-300"
+        {/* 🕒 Live Time Display */}
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 max-w-md mx-auto">
+            <h3 className="text-lg font-semibold text-foreground mb-2">🕒 Current Time</h3>
+            <div className="text-3xl font-bold text-primary tabular-nums mb-2">{timeString}</div>
+            <div className="text-sm text-muted-foreground mb-1">{dateString}</div>
+            <div className="text-xs text-muted-foreground opacity-75">Timezone: {getTimeZone()}</div>
+          </div>
+        </motion.div>
+
+        {/* ☕ Buy Me a Coffee Section */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <div className="bg-yellow-100 text-black rounded-2xl p-6 max-w-md mx-auto shadow-lg">
+            <h3 className="text-xl font-bold mb-2">☕ Buy Me a Coffee</h3>
+            <p className="text-sm mb-4">Support my work by sending a tip. Every contribution helps! 💛</p>
+            
+            {/* 🪙 UPI Pay Button */}
+            <a
+              href="upi://pay?pa=kishorejenacreation@axl&pn=Kishore%20Jena&cu=INR"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-full transition inline-block mb-4"
+            >
+              💸 Pay with UPI
+            </a>
+
+            {/* 📷 QR Code Image */}
+            <div className="flex justify-center mt-2">
+              <Image
+                src="https://i.postimg.cc/Gt8s5cy8/Screenshot-2025-02-01-192815.png"
+                alt="Scan to Pay"
+                width={150}
+                height={150}
+                className="rounded-lg border border-gray-300"
+              />
+            </div>
+
+            <p className="text-xs mt-2 text-muted-foreground">Scan the QR using any UPI app • Powered by Kishore Jena Creation</p>
+          </div>
+        </motion.div>
+
+        {/* 📸 Selfie Camera Section */}
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.4 }}
+        >
+          <h3 className="text-xl font-bold mb-3">📸 Click Your Selfie</h3>
+          <p className="text-sm text-muted-foreground mb-4">Take a quick selfie with filters and save your moment! ✨</p>
+          <DualCameraWithFilters />
+        </motion.div>
+
+        {/* 🔗 Navigation Links */}
+        <nav className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+          {["About", "Work", "Services", "Contact", "Privacy", "Terms"].map((item) => (
+            <div key={item} className="pb-6">
+              <Link
+                href={`#${item.toLowerCase()}`}
+                className="text-sm leading-6 text-muted-foreground hover:text-foreground"
               >
-                {f === "none" ? "Normal" : f}
-              </button>
-            ))}
-          </div>
+                {item}
+              </Link>
+            </div>
+          ))}
+        </nav>
 
-          {/* 📷 Controls */}
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              onClick={startCamera}
-              className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 flex items-center gap-2"
-            >
-              <CameraIcon className="h-5 w-5" />
-              Start Camera
-            </button>
-            <button
-              onClick={takePhoto}
-              className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
-            >
-              📸 Take Photo
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          <img
-            src={image}
-            alt="Captured"
-            className="rounded-lg border shadow-lg mx-auto w-[300px]"
-          />
-          <div className="flex justify-center gap-4 mt-3">
-            <button
-              onClick={reset}
-              className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600"
-            >
-              🔄 Retake
-            </button>
-            <button
-              onClick={saveImage}
-              className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700"
-            >
-              💾 Save
-            </button>
-          </div>
-        </>
-      )}
-
-      <canvas ref={canvasRef} className="hidden"></canvas>
-    </div>
+        {/* 📜 Footer Bottom */}
+        <div className="mt-10 text-center">
+          <p className="text-sm leading-5 text-muted-foreground">© 2025 Kishore Jena Creation. All rights reserved.</p>
+          <p className="text-xs leading-5 text-muted-foreground mt-2">
+            Professional Editing Services & Music Platform • Serving clients worldwide 🌍
+          </p>
+        </div>
+      </div>
+    </footer>
   )
 }

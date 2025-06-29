@@ -43,15 +43,16 @@ function getBotReplyOrMedia(input: string):
   }
 
   const instaMatch = url.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/);
-  if (instaMatch) {
-    const code = instaMatch[1];
-    return {
-      type: "media",
-      platform: "Instagram",
-      embedUrl: `https://www.instagram.com/embed/${id}`,
-      downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
-    };
-  }
+if (instaMatch) {
+  const code = instaMatch[1];
+  return {
+    type: "media",
+    platform: "Instagram",
+    embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
+    downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
+  };
+}
+
 
   return null;
 }

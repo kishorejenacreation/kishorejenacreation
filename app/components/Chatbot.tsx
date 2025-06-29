@@ -39,21 +39,7 @@ function isSimpleQuery(message: string) {
   if (lower.includes("your name")) {
     return "I’m CAYA, your AI assistant from Kishore Jena Creation!";
   }
-  if (lower.includes("instagram") || lower.includes("insta")) {
-    return "Click to download: https://savegram.app/en/instagram-video-downloader";
-  }
-  if (lower.includes("youtube") || lower.includes("you")) {
-    return "Click to download: https://snapany.com/youtube";
-  }
-  if (lower.includes("facebook") || lower.includes("face")) {
-    return "Click to download: https://snapany.com/facebook";
-  }
-  if (lower.includes("pinterest") || lower.includes("pint")) {
-    return "Click to download: https://snapany.com/pinterest";
-  }
-  if (lower.includes("threads") || lower.includes("thread")) {
-    return "Click to download: https://snapany.com/threads";
-  }
+  
   return null;
 }
 

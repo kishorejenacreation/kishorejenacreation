@@ -85,7 +85,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   required
                 />
                 {isLogin && (
-                  <p className="text-xs text-muted-foreground mt-1">Admin: kjcadmin | Users: Gmail address</p>
+                  <p className="text-xs text-muted-foreground mt-1">Admin | Users: Gmail address</p>
                 )}
               </div>
               <div>

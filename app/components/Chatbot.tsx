@@ -18,6 +18,91 @@ const getRandomResponse = (responses: string[]) => {
   return responses[Math.floor(Math.random() * responses.length)]
 }
 
+
+
+function getSocialMediaLinks(url: string) {
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([\w-]+)/);
+  const instaMatch = url.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/);
+  const fbMatch = url.match(/(?:facebook\.com\/.*\/videos\/|fb\.watch\/)([\w-]+)/);
+  const tiktokMatch = url.match(/(?:tiktok\.com\/@[\w.-]+\/video\/)(\d+)/);
+  const teraboxMatch = url.match(/(?:teraboxapp\.com\/s\/)([\w]+)/);
+  const snapMatch = url.match(/(?:snapchat\.com\/add\/)([\w]+)/);
+  const pinMatch = url.match(/(?:pinterest\.com\/pin\/)(\d+)/);
+  const threadsMatch = url.match(/(?:threads\.net\/@[\w.-]+\/post\/)(\d+)/);
+
+  if (ytMatch) {
+    const code = ytMatch[1];
+    return {
+      platform: "YouTube",
+      embedUrl: `https://www.youtube.com/embed/${code}`,
+      snapsaveUrl: `https://snapsave.app/youtube?url=https://www.youtube.com/watch?v=${code}`,
+      on4tUrl: `https://on4t.com/youtube-video-downloader?url=https://www.youtube.com/watch?v=${code}`
+    };
+  }
+
+  if (instaMatch) {
+    const code = instaMatch[1];
+    return {
+      platform: "Instagram",
+      embedUrl: `https://www.instagram.com/reel/${code}/embed`,
+      snapsaveUrl: `https://snapsave.app/instagram?url=https://www.instagram.com/reel/${code}/`,
+      on4tUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`
+    };
+  }
+
+  if (fbMatch) {
+    const code = fbMatch[1];
+    return {
+      platform: "Facebook",
+      snapsaveUrl: `https://snapsave.app/facebook?url=https://www.facebook.com/watch?v=${code}`,
+      on4tUrl: `https://on4t.com/facebook-video-downloader?url=https://www.facebook.com/watch?v=${code}`
+    };
+  }
+
+  if (tiktokMatch) {
+    const code = tiktokMatch[1];
+    return {
+      platform: "TikTok",
+      snapsaveUrl: `https://snapsave.app/tiktok?url=https://www.tiktok.com/@user/video/${code}`,
+      on4tUrl: `https://on4t.com/tiktok-video-downloader?url=https://www.tiktok.com/@user/video/${code}`
+    };
+  }
+
+  if (teraboxMatch) {
+    return {
+      platform: "Terabox",
+      embedUrl: "",
+      downloadUrl: `https://teraboxapp.com/s/${teraboxMatch[1]}`
+    };
+  }
+
+  if (snapMatch) {
+    return {
+      platform: "Snapchat",
+      embedUrl: "",
+      downloadUrl: `https://snapsave.app/snapchat?url=https://www.snapchat.com/add/${snapMatch[1]}`
+    };
+  }
+
+  if (pinMatch) {
+    return {
+      platform: "Pinterest",
+      embedUrl: "",
+      downloadUrl: `https://pinterestvideodownloader.com/?url=https://www.pinterest.com/pin/${pinMatch[1]}/`
+    };
+  }
+
+  if (threadsMatch) {
+    return {
+      platform: "Threads",
+      embedUrl: "",
+      downloadUrl: `https://snapsave.app/threads?url=https://www.threads.net/@user/post/${threadsMatch[1]}`
+    };
+  }
+
+  return null;
+}
+
 function isSimpleQuery(message: string) {
   const lower = message.toLowerCase()
   if (lower.includes("today") && lower.includes("date")) {
@@ -47,23 +132,8 @@ function isSimpleQuery(message: string) {
   return null
 }
 
-function isMediaLink(text: string): { embedUrl: string, downloadUrl: string } | null {
-  const ytMatch = text.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/)
-  const instaMatch = text.match(/(?:https?:\/\/)?(?:www\.)?instagram\.com\/(reel|p)\/([\w-]+)/)
 
-  if (ytMatch) {
-    return {
-      embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}`,
-      downloadUrl: `https://www.youtube.com/watch?v=${ytMatch[1]}`
-    }
-  } else if (instaMatch) {
-    return {
-      embedUrl: `https://www.instagram.com/${instaMatch[1]}/${instaMatch[2]}/embed/`,
-      downloadUrl: `https://ddinstagram.com/${instaMatch[1]}/${instaMatch[2]}` // using ddinstagram proxy for download
-    }
-  }
-  return null
-}
+
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false)

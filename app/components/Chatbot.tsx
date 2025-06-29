@@ -81,7 +81,7 @@ function getSocialMediaLinks(url: string) {
     }
   }
 
-  if (threadsMatch) {
+  else if (threadsMatch) {
     return {
       platform: "Threads",
       downloadUrl: `https://snapsave.app/threads?url=https://www.threads.net/@user/post/${threadsMatch[1]}`
@@ -114,7 +114,7 @@ function isSimpleQuery(message: string) {
   if (lower.includes("pinterest") || lower.includes("pint")) {
     return "Click this link to download Pinterest media: https://snapany.com/pinterest"
   }
-  if (lower.includes("threads") || lower.includes("thread")) {
+  else if (lower.includes("threads") || lower.includes("thread")) {
     return "Click this link to download Threads media: https://snapany.com/threads"
   }
   return null

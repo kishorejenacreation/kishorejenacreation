@@ -46,7 +46,9 @@ function getBotReplyOrMedia(input: string):
   if (instaMatch) {
     const code = instaMatch[1];
     return {
+      type: "media",
       platform: "Instagram",
+      embedUrl: `https://www.instagram.com/embed/${id}`,
       downloadUrl: `https://on4t.com/instagram-video-downloader?url=https://www.instagram.com/reel/${code}/`,
     };
   }

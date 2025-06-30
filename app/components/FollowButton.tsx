@@ -37,7 +37,7 @@ export default function FollowButton() {
       const today = new Date().toDateString()
 
       if (lastUpdate !== today) {
-        const newCount = followerCount + 5
+        const newCount = followerCount + 15
         setFollowerCount(newCount)
         localStorage.setItem("kjc_follower_count", newCount.toString())
         localStorage.setItem("kjc_last_follower_update", today)
@@ -90,7 +90,7 @@ export default function FollowButton() {
         }
       } else {
         // Decrease follower count
-        const newCount = Math.max(5862, followerCount - 1)
+        const newCount = Math.max(5881, followerCount - 1)
         setFollowerCount(newCount)
         localStorage.setItem("kjc_follower_count", newCount.toString())
 

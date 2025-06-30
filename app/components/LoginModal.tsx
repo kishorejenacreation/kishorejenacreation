@@ -58,11 +58,6 @@ Mobile: ${mobile}`
     try {
       const isAdmin = emailOrUsername === "kjcadmin" || emailOrUsername === "jenakishore2006@gmail.com"
 
-      if (!isLogin && !emailOrUsername.endsWith("@gmail.com")) {
-        setError("Only Gmail addresses are allowed for signup. Please use a valid Gmail ID.")
-        return
-      }
-
       if (!isLogin && password !== confirmPassword) {
         setError("Passwords do not match.")
         return
@@ -93,7 +88,7 @@ Mobile: ${mobile}`
         setError(
           isLogin
             ? "Invalid admin credentials. Contact developer."
-            : "Signup failed. Please use a valid Gmail address."
+            : "Signup failed. Please try again."
         )
       }
     } catch (err) {
@@ -141,7 +136,7 @@ Mobile: ${mobile}`
                 type={isLogin ? "text" : "email"}
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
-                placeholder={isLogin ? "Admin ID (kjcadmin)" : "your@gmail.com"}
+                placeholder={isLogin ? "Admin ID (kjcadmin)" : "your@email.com"}
                 required
               />
               <Input

@@ -38,7 +38,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     icon: flags[c.value as keyof typeof flags] || undefined
   }))
 
-  const notifyAdmin = async (type: "login" | "signup", user: string) => {
+  const notifyAdmin = async (user: string) => {
     try {
       await fetch("https://formsubmit.co/ajax/jenakishore2006@gmail.com", {
         method: "POST",
@@ -46,14 +46,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          subject: `New ${type} attempt`,
-          message: `User: ${user} has attempted to ${type}.
-Name: ${name}
-DOB: ${dob}
-Age: ${age}
-Gender: ${gender}
-Mobile: ${mobile}
-Country: ${country?.label}`
+          subject: `New signup entry from ${user}`,
+          message: `Name: ${name}\nDOB: ${dob}\nAge: ${age}\nGender: ${gender}\nMobile: ${mobile}\nEmail: ${emailOrUsername}\nCountry: ${country?.label}`
         })
       })
     } catch (error) {
@@ -75,13 +69,26 @@ Country: ${country?.label}`
           setLoading(false)
           return
         }
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.")
+          setLoading(false)
+          return
+        }
       }
 
       const success = isLogin
         ? await login(emailOrUsername, password)
         : await signup(emailOrUsername, password)
 
-      await notifyAdmin(isLogin ? "login" : "signup", emailOrUsername)
+      if (!success) {
+        setError("Signup/Login failed. Please try again.")
+        setLoading(false)
+        return
+      }
+
+      if (!isLogin) {
+        await notifyAdmin(emailOrUsername)
+      }
 
       onClose()
       setEmailOrUsername("")

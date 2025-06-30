@@ -38,7 +38,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         setError(
           isLogin
             ? "Invalid credentials. Use Gmail for regular users or 'kjcadmin' for admin."
-            : "Signup failed. Please use a Gmail address.",
+            : "Signup failed. Please use a Gmail address."
         )
       }
     } catch (err) {

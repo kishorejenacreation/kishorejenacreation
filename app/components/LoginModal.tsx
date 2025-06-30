@@ -8,6 +8,9 @@ import { XMarkIcon } from "@heroicons/react/24/outline"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "./AuthProvider"
+import countryList from "react-select-country-list"
+import Select from "react-select"
+import flags from "country-flag-icons/react/3x2"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -24,9 +27,16 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [age, setAge] = useState("")
   const [gender, setGender] = useState("")
   const [mobile, setMobile] = useState("")
+  const [country, setCountry] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { login, signup } = useAuth()
+
+  const countryOptions = countryList().getData().map((c) => ({
+    label: c.label,
+    value: c.value,
+    icon: flags[c.value as keyof typeof flags] || undefined
+  }))
 
   const notifyAdmin = async (type: "login" | "signup", user: string) => {
     try {
@@ -42,13 +52,17 @@ Name: ${name}
 DOB: ${dob}
 Age: ${age}
 Gender: ${gender}
-Mobile: ${mobile}`
+Mobile: ${mobile}
+Country: ${country?.label}`
         })
       })
     } catch (error) {
       console.error("Admin notification failed", error)
     }
   }
+
+  const validateMobile = (number: string) => /^\+?\d{10,15}$/.test(number)
+  const validateAge = (age: string) => Number(age) > 0 && Number(age) < 120
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -58,9 +72,26 @@ Mobile: ${mobile}`
     try {
       const isAdmin = emailOrUsername === "kjcadmin" || emailOrUsername === "jenakishore2006@gmail.com"
 
-      if (!isLogin && password !== confirmPassword) {
-        setError("Passwords do not match.")
-        return
+      if (!isLogin) {
+        if (!name || !dob || !age || !gender || !mobile || !country || !emailOrUsername || !password || !confirmPassword) {
+          setError("Please fill out all fields.")
+          return
+        }
+
+        if (!validateAge(age)) {
+          setError("Please enter a valid age.")
+          return
+        }
+
+        if (!validateMobile(mobile)) {
+          setError("Please enter a valid mobile number with country code.")
+          return
+        }
+
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.")
+          return
+        }
       }
 
       if (isLogin && !isAdmin) {
@@ -84,6 +115,7 @@ Mobile: ${mobile}`
         setAge("")
         setGender("")
         setMobile("")
+        setCountry(null)
       } else {
         setError(
           isLogin
@@ -129,7 +161,14 @@ Mobile: ${mobile}`
                   <Input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} required />
                   <Input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} required />
                   <Input placeholder="Gender" value={gender} onChange={(e) => setGender(e.target.value)} required />
-                  <Input type="tel" placeholder="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
+                  <Input type="tel" placeholder="Mobile Number (+countrycode)" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
+                  <Select
+                    options={countryOptions}
+                    value={country}
+                    onChange={setCountry}
+                    placeholder="Select your country"
+                    className="text-sm"
+                  />
                 </>
               )}
               <Input

@@ -15,7 +15,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [isLogin, setIsLogin] = useState(true)
+  const [isLogin, setIsLogin] = useState(false) // default to Sign Up
   const [emailOrUsername, setEmailOrUsername] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -59,7 +59,7 @@ Mobile: ${mobile}`
       const isAdmin = emailOrUsername === "kjcadmin" || emailOrUsername === "jenakishore2006@gmail.com"
 
       if (!isLogin && !emailOrUsername.endsWith("@gmail.com")) {
-        setError("Signup failed. Please use a valid Gmail address.")
+        setError("Only Gmail addresses are allowed for signup. Please use a valid Gmail ID.")
         return
       }
 
@@ -68,8 +68,8 @@ Mobile: ${mobile}`
         return
       }
 
-      if (isLogin && !isAdmin && !emailOrUsername.endsWith("@gmail.com")) {
-        setError("Login failed. Only Gmail users or 'kjcadmin' are allowed.")
+      if (isLogin && !isAdmin) {
+        setError("Login only allowed for administrator.")
         return
       }
 
@@ -92,7 +92,7 @@ Mobile: ${mobile}`
       } else {
         setError(
           isLogin
-            ? "Invalid credentials. Use Gmail for regular users or 'kjcadmin'."
+            ? "Invalid admin credentials. Contact developer."
             : "Signup failed. Please use a valid Gmail address."
         )
       }
@@ -121,7 +121,7 @@ Mobile: ${mobile}`
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">{isLogin ? "Login" : "Sign Up"}</h2>
+              <h2 className="text-2xl font-bold">{isLogin ? "Admin Login" : "User Sign Up"}</h2>
               <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
                 <XMarkIcon className="h-6 w-6" />
               </button>
@@ -141,7 +141,7 @@ Mobile: ${mobile}`
                 type={isLogin ? "text" : "email"}
                 value={emailOrUsername}
                 onChange={(e) => setEmailOrUsername(e.target.value)}
-                placeholder={isLogin ? "kjcadmin or your@gmail.com" : "your@gmail.com"}
+                placeholder={isLogin ? "Admin ID (kjcadmin)" : "your@gmail.com"}
                 required
               />
               <Input
@@ -161,15 +161,37 @@ Mobile: ${mobile}`
                 />
               )}
               {error && <p className="text-red-500 text-sm">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}
+              <Button
+                type="submit"
+                className="w-full bg-purple-600 text-white rounded-lg text-lg py-2 hover:bg-purple-700"
+                disabled={loading}
+              >
+                {loading ? "Please wait..." : isLogin ? "🔐 Admin Login" : "🎉 Sign Up"}
               </Button>
             </form>
 
             <div className="mt-4 text-center">
-              <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline text-sm">
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
-              </button>
+              {isLogin ? (
+                <p className="text-sm">
+                  Not an admin?{' '}
+                  <button
+                    onClick={() => setIsLogin(false)}
+                    className="text-primary hover:underline"
+                  >
+                    Sign up here
+                  </button>
+                </p>
+              ) : (
+                <p className="text-sm">
+                  Already an admin?{' '}
+                  <button
+                    onClick={() => setIsLogin(true)}
+                    className="text-primary hover:underline"
+                  >
+                    Login here
+                  </button>
+                </p>
+              )}
             </div>
           </motion.div>
         </motion.div>

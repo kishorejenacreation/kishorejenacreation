@@ -7,6 +7,12 @@ interface User {
   email?: string
   username?: string
   isAdmin: boolean
+  name?: string
+  dob?: string
+  age?: string
+  gender?: string
+  mobile?: string
+  country?: string
 }
 
 interface AuthContextType {
@@ -31,7 +37,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    // Check for stored user session
     const storedUser = localStorage.getItem("kjc_user")
     if (storedUser) {
       setUser(JSON.parse(storedUser))
@@ -40,52 +45,35 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
     try {
-      // Admin login with specific credentials
+      // Admin login
       if (emailOrUsername === "kjcadmin" && password === "kjc2005") {
-        const adminUser = {
+        const adminUser: User = {
           id: "admin",
           username: "kjcadmin",
           email: "jenakishore2006@gmail.com",
-          isAdmin: true,
+          isAdmin: true
         }
         setUser(adminUser)
         localStorage.setItem("kjc_user", JSON.stringify(adminUser))
-
-        // Track admin login
-        const loginData = JSON.parse(localStorage.getItem("kjc_user_logins") || "[]")
-        loginData.push({
-          email: adminUser.email,
-          timestamp: new Date().toISOString(),
-          type: "admin",
-        })
-        localStorage.setItem("kjc_user_logins", JSON.stringify(loginData))
-
         return true
       }
 
-      // Regular user login with Gmail
-      if (emailOrUsername.includes("@gmail.com") && password.length >= 6) {
-        const regularUser = {
-          id: Date.now().toString(),
-          email: emailOrUsername,
-          isAdmin: false,
-        }
-        setUser(regularUser)
-        localStorage.setItem("kjc_user", JSON.stringify(regularUser))
-
-        // Track user login
-        const loginData = JSON.parse(localStorage.getItem("kjc_user_logins") || "[]")
-        loginData.push({
-          email: regularUser.email,
-          timestamp: new Date().toISOString(),
-          type: "user",
-        })
-        localStorage.setItem("kjc_user_logins", JSON.stringify(loginData))
-
-        return true
+      // Regular user login
+      const existing = JSON.parse(localStorage.getItem("kjc_user") || "{}")
+      const regularUser: User = {
+        id: existing.id || Date.now().toString(),
+        email: emailOrUsername,
+        isAdmin: false,
+        name: existing.name,
+        dob: existing.dob,
+        age: existing.age,
+        gender: existing.gender,
+        mobile: existing.mobile,
+        country: existing.country
       }
-
-      return false
+      setUser(regularUser)
+      localStorage.setItem("kjc_user", JSON.stringify(regularUser))
+      return true
     } catch (error) {
       console.error("Login error:", error)
       return false
@@ -93,17 +81,29 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const signup = async (email: string, password: string): Promise<boolean> => {
-    if (email.includes("@gmail.com") && password.length >= 6) {
-      const newUser = {
-        id: Date.now().toString(),
-        email,
-        isAdmin: false,
+    try {
+      if (email && password.length >= 4) {
+        const form = JSON.parse(localStorage.getItem("kjc_signup_form") || "{}")
+        const newUser: User = {
+          id: Date.now().toString(),
+          email,
+          isAdmin: false,
+          name: form.name,
+          dob: form.dob,
+          age: form.age,
+          gender: form.gender,
+          mobile: form.mobile,
+          country: form.country
+        }
+        setUser(newUser)
+        localStorage.setItem("kjc_user", JSON.stringify(newUser))
+        return true
       }
-      setUser(newUser)
-      localStorage.setItem("kjc_user", JSON.stringify(newUser))
-      return true
+      return false
+    } catch (err) {
+      console.error("Signup error:", err)
+      return false
     }
-    return false
   }
 
   const logout = () => {
@@ -118,7 +118,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         signup,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user
       }}
     >
       {children}

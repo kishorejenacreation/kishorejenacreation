@@ -1,16 +1,13 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "./AuthProvider"
-import countryList from "react-select-country-list"
 import Select from "react-select"
-import flags from "country-flag-icons/react/3x2"
+import countryList from "react-select-country-list"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -32,75 +29,52 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState("")
   const { login, signup } = useAuth()
 
-  const countryOptions = countryList().getData().map((c) => ({
-    label: c.label,
-    value: c.value,
-    icon: flags[c.value as keyof typeof flags] || undefined
-  }))
-
-  const notifyAdmin = async (user: string) => {
-    try {
-      await fetch("https://formsubmit.co/ajax/jenakishore2006@gmail.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          subject: `New signup entry from ${user}`,
-          message: `Name: ${name}\nDOB: ${dob}\nAge: ${age}\nGender: ${gender}\nMobile: ${mobile}\nEmail: ${emailOrUsername}\nCountry: ${country?.label}`
-        })
-      })
-    } catch (error) {
-      console.error("Admin notification failed", error)
-    }
-  }
+  const options = countryList().getData()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
+    if (!isLogin && password !== confirmPassword) {
+      setError("Passwords do not match")
+      setLoading(false)
+      return
+    }
+
+    if (!isLogin && (!emailOrUsername || !password || !name || !dob || !age || !gender || !mobile || !country)) {
+      setError("Please fill out all fields")
+      setLoading(false)
+      return
+    }
+
     try {
-      const isAdmin = emailOrUsername === "kjcadmin" || emailOrUsername === "jenakishore2006@gmail.com"
-
-      if (!isLogin) {
-        if (!name || !dob || !age || !gender || !mobile || !country || !emailOrUsername || !password || !confirmPassword) {
-          setError("Please fill out all fields.")
-          setLoading(false)
-          return
-        }
-        if (password !== confirmPassword) {
-          setError("Passwords do not match.")
-          setLoading(false)
-          return
-        }
-      }
-
       const success = isLogin
         ? await login(emailOrUsername, password)
         : await signup(emailOrUsername, password)
 
-      if (!success) {
-        setError("Signup/Login failed. Please try again.")
-        setLoading(false)
-        return
+      if (success) {
+        if (!isLogin) {
+          localStorage.setItem(
+            "kjc_signup_form",
+            JSON.stringify({ name, dob, age, gender, mobile, country: country.label })
+          )
+        }
+        setEmailOrUsername("")
+        setPassword("")
+        setConfirmPassword("")
+        setName("")
+        setDob("")
+        setAge("")
+        setGender("")
+        setMobile("")
+        setCountry(null)
+        onClose()
+      } else {
+        setError(
+          isLogin ? "Invalid admin credentials. Contact developer." : "Signup failed. Please try again."
+        )
       }
-
-      if (!isLogin) {
-        await notifyAdmin(emailOrUsername)
-      }
-
-      onClose()
-      setEmailOrUsername("")
-      setPassword("")
-      setConfirmPassword("")
-      setName("")
-      setDob("")
-      setAge("")
-      setGender("")
-      setMobile("")
-      setCountry(null)
-
     } catch (err) {
       setError("An error occurred")
     } finally {
@@ -119,91 +93,129 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           onClick={onClose}
         >
           <motion.div
-            className="bg-background rounded-2xl p-6 w-full max-w-md"
+            className="bg-background rounded-2xl p-6 w-full max-w-md overflow-y-auto max-h-[90vh]"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">{isLogin ? "Admin Login" : "User Sign Up"}</h2>
+              <h2 className="text-2xl font-bold">
+                {isLogin ? "🔐 Login (Admin Only)" : "🎉 Sign Up"}
+              </h2>
               <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
                 <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
-                <>
-                  <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
-                  <Input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} required />
-                  <Input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} required />
-                  <Input placeholder="Gender" value={gender} onChange={(e) => setGender(e.target.value)} required />
-                  <Input type="tel" placeholder="Mobile Number (+countrycode)" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
-                  <Select
-                    options={countryOptions}
-                    value={country}
-                    onChange={setCountry}
-                    placeholder="Select your country"
-                    className="text-sm"
-                  />
-                </>
-              )}
-              <Input
-                type={isLogin ? "text" : "email"}
-                value={emailOrUsername}
-                onChange={(e) => setEmailOrUsername(e.target.value)}
-                placeholder={isLogin ? "Admin ID (kjcadmin)" : "your@email.com"}
-                required
-              />
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
-              {!isLogin && (
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {isLogin ? "Email or Username" : "Email Address"}
+                </label>
                 <Input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm your password"
+                  type="email"
+                  value={emailOrUsername}
+                  onChange={(e) => setEmailOrUsername(e.target.value)}
+                  placeholder="example@gmail.com"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Password</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {!isLogin && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Confirm Password</label>
+                    <Input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Full Name</label>
+                    <Input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">DOB</label>
+                      <Input
+                        type="date"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Age</label>
+                      <Input
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Gender</label>
+                      <Input
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Mobile</label>
+                      <Input
+                        value={mobile}
+                        onChange={(e) => setMobile(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Country</label>
+                    <Select
+                      options={options}
+                      value={country}
+                      onChange={setCountry}
+                      className="text-sm"
+                    />
+                  </div>
+                </>
               )}
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              <Button
-                type="submit"
-                className="w-full bg-purple-600 text-white rounded-lg text-lg py-2 hover:bg-purple-700"
-                disabled={loading}
-              >
-                {loading ? "Please wait..." : isLogin ? "🔐 Admin Login" : "🎉 Sign Up"}
+
+              {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+              <Button type="submit" className="w-full bg-purple-600 text-white rounded-lg">
+                {loading ? "Please wait..." : isLogin ? "🔐 Login" : "🎉 Sign Up"}
               </Button>
             </form>
 
             <div className="mt-4 text-center">
-              {isLogin ? (
-                <p className="text-sm">
-                  Not an admin?{' '}
-                  <button
-                    onClick={() => setIsLogin(false)}
-                    className="text-primary hover:underline"
-                  >
-                    Sign up here
-                  </button>
-                </p>
-              ) : (
-                <p className="text-sm">
-                  Already an admin?{' '}
-                  <button
-                    onClick={() => setIsLogin(true)}
-                    className="text-primary hover:underline"
-                  >
-                    Login here
-                  </button>
-                </p>
-              )}
+              <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline text-sm">
+                {isLogin ? "New user? Sign up here." : "If you're admin, login here."}
+              </button>
             </div>
           </motion.div>
         </motion.div>

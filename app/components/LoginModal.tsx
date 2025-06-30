@@ -18,9 +18,37 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [isLogin, setIsLogin] = useState(true)
   const [emailOrUsername, setEmailOrUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [name, setName] = useState("")
+  const [dob, setDob] = useState("")
+  const [age, setAge] = useState("")
+  const [gender, setGender] = useState("")
+  const [mobile, setMobile] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const { login, signup } = useAuth()
+
+  const notifyAdmin = async (type: "login" | "signup", user: string) => {
+    try {
+      await fetch("https://formsubmit.co/ajax/jenakishore2006@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          subject: `New ${type} attempt`,
+          message: `User: ${user} has attempted to ${type}.
+Name: ${name}
+DOB: ${dob}
+Age: ${age}
+Gender: ${gender}
+Mobile: ${mobile}`
+        })
+      })
+    } catch (error) {
+      console.error("Admin notification failed", error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,17 +56,44 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     setError("")
 
     try {
-      const success = isLogin ? await login(emailOrUsername, password) : await signup(emailOrUsername, password)
+      const isAdmin = emailOrUsername === "kjcadmin" || emailOrUsername === "jenakishore2006@gmail.com"
+
+      if (!isLogin && !emailOrUsername.endsWith("@gmail.com")) {
+        setError("Signup failed. Please use a valid Gmail address.")
+        return
+      }
+
+      if (!isLogin && password !== confirmPassword) {
+        setError("Passwords do not match.")
+        return
+      }
+
+      if (isLogin && !isAdmin && !emailOrUsername.endsWith("@gmail.com")) {
+        setError("Login failed. Only Gmail users or 'kjcadmin' are allowed.")
+        return
+      }
+
+      const success = isLogin
+        ? await login(emailOrUsername, password)
+        : await signup(emailOrUsername, password)
+
+      await notifyAdmin(isLogin ? "login" : "signup", emailOrUsername)
 
       if (success) {
         onClose()
         setEmailOrUsername("")
         setPassword("")
+        setConfirmPassword("")
+        setName("")
+        setDob("")
+        setAge("")
+        setGender("")
+        setMobile("")
       } else {
         setError(
           isLogin
-            ? "Invalid credentials. Use Gmail for regular users or 'kjcadmin' for admin."
-            : "Signup failed. Please use a Gmail address."
+            ? "Invalid credentials. Use Gmail for regular users or 'kjcadmin'."
+            : "Signup failed. Please use a valid Gmail address."
         )
       }
     } catch (err) {
@@ -73,31 +128,38 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  {isLogin ? "Email or Username" : "Gmail Address"}
-                </label>
-                <Input
-                  type={isLogin ? "text" : "email"}
-                  value={emailOrUsername}
-                  onChange={(e) => setEmailOrUsername(e.target.value)}
-                  placeholder={isLogin ? "kjcadmin or your@gmail.com" : "your@gmail.com"}
-                  required
-                />
-                {isLogin && (
-                  <p className="text-xs text-muted-foreground mt-1">Admin | Users: Gmail address</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Password</label>
+              {!isLogin && (
+                <>
+                  <Input placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required />
+                  <Input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} required />
+                  <Input type="number" placeholder="Age" value={age} onChange={(e) => setAge(e.target.value)} required />
+                  <Input placeholder="Gender" value={gender} onChange={(e) => setGender(e.target.value)} required />
+                  <Input type="tel" placeholder="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
+                </>
+              )}
+              <Input
+                type={isLogin ? "text" : "email"}
+                value={emailOrUsername}
+                onChange={(e) => setEmailOrUsername(e.target.value)}
+                placeholder={isLogin ? "kjcadmin or your@gmail.com" : "your@gmail.com"}
+                required
+              />
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+              />
+              {!isLogin && (
                 <Input
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your password"
                   required
                 />
-              </div>
+              )}
               {error && <p className="text-red-500 text-sm">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Please wait..." : isLogin ? "Login" : "Sign Up"}

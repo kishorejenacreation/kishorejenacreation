@@ -18,7 +18,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const [isLogin, setIsLogin] = useState(false) // default to Sign Up
+  const [isLogin, setIsLogin] = useState(false)
   const [emailOrUsername, setEmailOrUsername] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -61,9 +61,6 @@ Country: ${country?.label}`
     }
   }
 
-  const validateMobile = (number: string) => /^\+?\d{10,15}$/.test(number)
-  const validateAge = (age: string) => Number(age) > 0 && Number(age) < 120
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -75,28 +72,9 @@ Country: ${country?.label}`
       if (!isLogin) {
         if (!name || !dob || !age || !gender || !mobile || !country || !emailOrUsername || !password || !confirmPassword) {
           setError("Please fill out all fields.")
+          setLoading(false)
           return
         }
-
-        if (!validateAge(age)) {
-          setError("Please enter a valid age.")
-          return
-        }
-
-        if (!validateMobile(mobile)) {
-          setError("Please enter a valid mobile number with country code.")
-          return
-        }
-
-        if (password !== confirmPassword) {
-          setError("Passwords do not match.")
-          return
-        }
-      }
-
-      if (isLogin && !isAdmin) {
-        setError("Login only allowed for administrator.")
-        return
       }
 
       const success = isLogin
@@ -105,24 +83,17 @@ Country: ${country?.label}`
 
       await notifyAdmin(isLogin ? "login" : "signup", emailOrUsername)
 
-      if (success) {
-        onClose()
-        setEmailOrUsername("")
-        setPassword("")
-        setConfirmPassword("")
-        setName("")
-        setDob("")
-        setAge("")
-        setGender("")
-        setMobile("")
-        setCountry(null)
-      } else {
-        setError(
-          isLogin
-            ? "Invalid admin credentials. Contact developer."
-            : "Signup failed. Please try again."
-        )
-      }
+      onClose()
+      setEmailOrUsername("")
+      setPassword("")
+      setConfirmPassword("")
+      setName("")
+      setDob("")
+      setAge("")
+      setGender("")
+      setMobile("")
+      setCountry(null)
+
     } catch (err) {
       setError("An error occurred")
     } finally {

@@ -11,8 +11,8 @@ import LoginModal from "./LoginModal"
 import NotificationPanel from "./NotificationPanel"
 import LiveClock from "./LiveClock"
 import UserNotificationPanel from "./UserNotificationPanel"
+import Image from "next/image"
 
-// Updated theme toggle icon
 const ThemeToggle = () => {
   const { theme, setTheme, systemTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -32,34 +32,12 @@ const ThemeToggle = () => {
       aria-label="Toggle theme"
     >
       {currentTheme === "dark" ? (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="h-5 w-5"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12h2.25m.386-6.364 1.591 1.591M12 6.75a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5Z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12h2.25m.386-6.364 1.591 1.591M12 6.75a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5Z" />
         </svg>
       ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="h-5 w-5"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
         </svg>
       )}
     </button>
@@ -75,12 +53,25 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
-        className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
+      <motion.header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border" initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.6 }}>
+        {/* 🎉 Festival/National Holiday Banner Section */}
+        <div className="w-full bg-black rounded-xl shadow-xl overflow-hidden mb-2">
+          <div className="relative w-full h-28">
+            <Image
+              src="/banner/wish.jpg"
+              alt="Festival Banner"
+              layout="fill"
+              objectFit="cover"
+              className="opacity-90"
+            />
+          </div>
+          <div className="text-center py-2 px-4">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-red-600 animate-pulse drop-shadow-lg">
+              🌟 Happy Festival Celebration from KJC 🌟
+            </h1>
+          </div>
+        </div>
+
         <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1 items-center gap-4">
             <Link href="/" className="-m-1.5 p-1.5">
@@ -88,57 +79,30 @@ export default function Header() {
             </Link>
             <LiveClock />
           </div>
+
           <div className="flex gap-x-8">
-            <Link
-              href="#services"
-              className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
-            >
-              Services
-            </Link>
-            <Link
-              href="#about"
-              className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="#music"
-              className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
-            >
-              Music
-            </Link>
-            <Link
-              href="#reviews"
-              className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors"
-            >
-              Reviews
-            </Link>
+            <Link href="#services" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Services</Link>
+            <Link href="#about" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">About</Link>
+            <Link href="#music" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Music</Link>
+            <Link href="#reviews" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Reviews</Link>
             {user?.isAdmin && (
-              <Link
-                href="/admin"
-                className="text-sm font-semibold leading-6 text-orange-600 hover:text-orange-500 transition-colors flex items-center gap-1"
-              >
+              <Link href="/admin" className="text-sm font-semibold leading-6 text-orange-600 hover:text-orange-500 transition-colors flex items-center gap-1">
                 <CogIcon className="h-4 w-4" />
                 Admin
               </Link>
             )}
           </div>
+
           <div className="flex flex-1 justify-end items-center gap-4">
             {user?.isAdmin && (
-              <button
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="relative rounded-full p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-              >
+              <button onClick={() => setShowNotifications(!showNotifications)} className="relative rounded-full p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                 <BellIcon className="h-5 w-5" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
               </button>
             )}
             <ThemeToggle />
             {!user?.isAdmin && isAuthenticated && (
-              <button
-                onClick={() => setShowUserNotifications(!showUserNotifications)}
-                className="relative rounded-full p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-              >
+              <button onClick={() => setShowUserNotifications(!showUserNotifications)} className="relative rounded-full p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                 <BellIcon className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
@@ -153,18 +117,12 @@ export default function Header() {
                   {user?.username || user?.email}
                   {user?.isAdmin && <span className="ml-1 text-orange-500">(Admin)</span>}
                 </Link>
-                <button
-                  onClick={logout}
-                  className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
-                >
+                <button onClick={logout} className="text-sm font-semibold text-foreground hover:text-primary transition-colors">
                   Logout
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setShowLogin(true)}
-                className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors"
-              >
+              <button onClick={() => setShowLogin(true)} className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors">
                 <UserIcon className="h-5 w-5" />
                 Login
               </button>
@@ -175,9 +133,7 @@ export default function Header() {
 
       <LoginModal isOpen={showLogin} onClose={() => setShowLogin(false)} />
       {user?.isAdmin && <NotificationPanel isOpen={showNotifications} onClose={() => setShowNotifications(false)} />}
-      {!user?.isAdmin && (
-        <UserNotificationPanel isOpen={showUserNotifications} onClose={() => setShowUserNotifications(false)} />
-      )}
+      {!user?.isAdmin && <UserNotificationPanel isOpen={showUserNotifications} onClose={() => setShowUserNotifications(false)} />}
     </>
   )
 }

@@ -69,15 +69,16 @@ function getBotReplyOrMedia(input: string):
   }
 
   const instaMatch = input.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/)
-  if (instaMatch) {
-    const code = instaMatch[1]
-    return {
-      type: "media",
-      platform: "Instagram",
-      embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
-      downloadUrl: `/api/download/instagram?url=https://www.instagram.com/reel/${code}/`,
-    }
+if (instaMatch) {
+  const code = instaMatch[1]
+  return {
+    type: "media",
+    platform: "Instagram",
+    embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
+    downloadUrl: `/api/download/instagram?url=https://www.instagram.com/reel/${code}/`,
   }
+}
+
 
   const teraMatch = input.match(/terabox\.com\/s\/([\w-]+)/)
   if (teraMatch) {

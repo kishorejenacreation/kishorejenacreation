@@ -90,7 +90,7 @@ export default function FollowButton() {
         }
       } else {
         // Decrease follower count
-        const newCount = Math.max(5881, followerCount - 1)
+        const newCount = Math.max(5906, followerCount - 1)
         setFollowerCount(newCount)
         localStorage.setItem("kjc_follower_count", newCount.toString())
 

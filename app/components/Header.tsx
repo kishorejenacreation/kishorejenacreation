@@ -54,34 +54,7 @@ export default function Header() {
   return (
     <>
       <motion.header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border" initial={{ y: -100 }} animate={{ y: 0 }} transition={{ duration: 0.6 }}>
-        {/* 🎉 Festival/National Holiday Banner Section */}
-
-
-           { /* 🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-            🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄  */ }
-
-
-        <div className="w-full bg-black rounded-xl shadow-xl overflow-hidden mb-2">
-          <div className="relative w-full h-28">
-            <Image
-              src="https://i.postimg.cc/mD6467MK/doctors-day-68622b5d8b314.webp"
-              alt="Festival Banner"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-80"
-            />
-          </div>
-          <div className="text-center py-2 px-4">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-red-600 animate-pulse drop-shadow-lg">
-  🌟 HAPPY DOCTOR'S DAY 🌟
-</h1>
-<br />
-<h4 className="mt-1 text-sm sm:text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-400 to-red-500 animate-pulse drop-shadow-md">
-  ✨ To the hands that heal, the hearts that comfort, and the minds that inspire—Happy Doctors' Day 2025! 🩺
-</h4>
-
-          </div>
-        </div>
+        
 
         <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
           <div className="flex lg:flex-1 items-center gap-4">

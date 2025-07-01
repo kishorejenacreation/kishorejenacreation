@@ -189,6 +189,40 @@ export default function Chatbot() {
         return
       }
     }
+
+    try {
+      const res = await fetch("/api/ask-caya", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: inputText }),
+      })
+
+      const data = await res.json()
+      const reply = data.reply
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: reply || "🤖 Sorry, I couldn't find an answer.",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    } catch (err) {
+      console.error("Ask-Caya error:", err)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: "⚠️ Failed to get a response. Please try again later.",
+          isBot: true,
+          timestamp: new Date(),
+        },
+      ])
+    } finally {
+      setIsTyping(false)
+    }
   }
 
   return (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 export default function Hero() {
   const [currentTime, setCurrentTime] = useState(new Date())
@@ -66,36 +67,27 @@ export default function Hero() {
             </div>
           </motion.div>
 
-              {/* 🎉 Festival/National Holiday Banner Section */}
-
-
-           { /* 🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-            🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄🪄  */ }
-
-
-        <div className="w-full bg-black rounded-xl shadow-xl overflow-hidden mb-2">
-          <div className="relative w-full h-28">
-            <Image
-              src="https://i.postimg.cc/mD6467MK/doctors-day-68622b5d8b314.webp"
-              alt="Festival Banner"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-80"
-            />
+          {/* 🎉 Festival Banner */}
+          <div className="w-full bg-black rounded-xl shadow-xl overflow-hidden mb-6">
+            <div className="relative w-full h-28">
+              <Image
+                src="https://i.postimg.cc/mD6467MK/doctors-day-68622b5d8b314.webp"
+                alt="Festival Banner"
+                fill
+                className="object-cover opacity-80"
+              />
+            </div>
+            <div className="text-center py-2 px-4">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-red-600 animate-pulse drop-shadow-lg">
+                🌟 HAPPY DOCTOR'S DAY 🌟
+              </h1>
+              <h4 className="mt-1 text-sm sm:text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-400 to-red-500 animate-pulse drop-shadow-md">
+                ✨ To the hands that heal, the hearts that comfort, and the minds that inspire—Happy Doctors' Day 2025! 🩺
+              </h4>
+            </div>
           </div>
-          <div className="text-center py-2 px-4">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-red-600 animate-pulse drop-shadow-lg">
-  🌟 HAPPY DOCTOR'S DAY 🌟
-</h1>
-<br />
-<h4 className="mt-1 text-sm sm:text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-400 to-red-500 animate-pulse drop-shadow-md">
-  ✨ To the hands that heal, the hearts that comfort, and the minds that inspire—Happy Doctors' Day 2025! 🩺
-</h4>
 
-          </div>
-        </div>
-          
-
+          {/* Main Title and Info */}
           <motion.h1
             className="mt-10 text-4xl font-bold tracking-tight text-foreground sm:text-6xl"
             initial={{ opacity: 0, y: 20 }}
@@ -104,6 +96,7 @@ export default function Hero() {
           >
             <span className="text-gradient">KISHORE JENA CREATION</span>
           </motion.h1>
+
           <motion.p
             className="mt-6 text-lg leading-8 text-muted-foreground"
             initial={{ opacity: 0, y: 20 }}
@@ -111,8 +104,9 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             Professional editing services and online music streaming platform. From video editing to photo manipulation,
-            wedding invitations to thumbnail designs - we bring your creative vision to life with 50M+ English songs.
+            wedding invitations to thumbnail designs – we bring your creative vision to life with 50M+ English songs.
           </motion.p>
+
           <motion.div
             className="mt-10 flex items-center gap-x-6"
             initial={{ opacity: 0, y: 20 }}
@@ -127,6 +121,8 @@ export default function Hero() {
             </a>
           </motion.div>
         </div>
+
+        {/* Animated Icon Area */}
         <motion.div
           className="mx-auto mt-16 lg:mt-0"
           initial={{ opacity: 0, x: 20 }}

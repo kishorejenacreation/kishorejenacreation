@@ -42,7 +42,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       return
     }
 
-    if (!isLogin && (!emailOrUsername || !password || !name || !dob || !age || !gender || !mobile || !country)) {
+    if (
+      !isLogin &&
+      (!emailOrUsername || !password || !name || !dob || !age || !gender || !mobile || !country)
+    ) {
       setError("Please fill out all fields")
       setLoading(false)
       return
@@ -55,11 +58,28 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
       if (success) {
         if (!isLogin) {
-          localStorage.setItem(
-            "kjc_signup_form",
-            JSON.stringify({ name, dob, age, gender, mobile, country: country.label })
-          )
+          const signupData = {
+            username: name,
+            email: emailOrUsername,
+            dob,
+            age,
+            gender,
+            mobile,
+            country: country.label,
+          }
+
+          // Save locally if needed
+          localStorage.setItem("kjc_signup_form", JSON.stringify(signupData))
+
+          // Send data to backend email API
+          await fetch("/api/send-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(signupData),
+          })
         }
+
+        // Reset form
         setEmailOrUsername("")
         setPassword("")
         setConfirmPassword("")
@@ -69,6 +89,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         setGender("")
         setMobile("")
         setCountry(null)
+
         onClose()
       } else {
         setError(
@@ -213,7 +234,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </form>
 
             <div className="mt-4 text-center">
-              <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline text-sm">
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-primary hover:underline text-sm"
+              >
                 {isLogin ? "New user? Sign up here." : "If you're admin, login here."}
               </button>
             </div>

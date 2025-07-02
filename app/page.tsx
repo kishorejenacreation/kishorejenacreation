@@ -18,28 +18,37 @@ export default function Home() {
   const [showPopup, setShowPopup] = useState(false)
 
   useEffect(() => {
-    const cancelTime = localStorage.getItem("popup_cancel_time")
+    const checkAndShowPopup = () => {
+      const cancelTime = localStorage.getItem("popup_cancel_time")
 
-    if (!cancelTime) {
-      // No cancel, show modal
-      setShowPopup(true)
-    } else {
-      const timePassed = Date.now() - parseInt(cancelTime, 10)
-      const waitTime = 3 * 60 * 1000 // 3 minutes in milliseconds
-
-      if (timePassed >= waitTime) {
+      if (!cancelTime) {
         setShowPopup(true)
-        localStorage.removeItem("popup_cancel_time")
       } else {
-        const remaining = waitTime - timePassed
-        const timeout = setTimeout(() => {
+        const timePassed = Date.now() - parseInt(cancelTime, 10)
+        const waitTime = 3 * 60 * 1000
+
+        if (timePassed >= waitTime) {
           setShowPopup(true)
           localStorage.removeItem("popup_cancel_time")
-        }, remaining)
-
-        return () => clearTimeout(timeout)
+        } else {
+          const remaining = waitTime - timePassed
+          setTimeout(() => {
+            setShowPopup(true)
+            localStorage.removeItem("popup_cancel_time")
+          }, remaining)
+        }
       }
     }
+
+    // ✅ Initial check
+    checkAndShowPopup()
+
+    // ✅ Auto-show popup every 3 minutes
+    const interval = setInterval(() => {
+      checkAndShowPopup()
+    }, 3 * 60 * 1000)
+
+    return () => clearInterval(interval)
   }, [])
 
   return (
@@ -63,7 +72,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 📋 Admin Signup Data Viewer */}
       <SignupDashboard />
     </>
   )

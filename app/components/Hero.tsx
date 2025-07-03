@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useLayoutEffect } from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 
@@ -8,7 +8,7 @@ export default function Hero() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isMobile, setIsMobile] = useState(false)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768)
     }
@@ -21,7 +21,6 @@ export default function Hero() {
     const timer = setInterval(() => {
       setCurrentTime(new Date())
     }, 1000)
-
     return () => clearInterval(timer)
   }, [])
 

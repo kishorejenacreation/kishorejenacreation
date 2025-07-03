@@ -91,24 +91,26 @@ export default function Hero() {
   🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
   🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉 */}
 
-          {/*<div className="w-full bg-black rounded-xl shadow-xl overflow-hidden mb-6">
-            <div className="relative w-full h-28">
-              <Image
-                src="https://i.postimg.cc/mD6467MK/doctors-day-68622b5d8b314.webp"
-                alt="Festival Banner"
-                fill
-                className="object-cover opacity-80"
-              />
-            </div>
-            <div className="text-center py-2 px-4">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-500 to-red-600 animate-pulse drop-shadow-lg">
-                🌟 HAPPY DOCTOR'S DAY 🌟
-              </h1>
-              <h4 className="mt-1 text-sm sm:text-lg font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-blue-400 to-red-500 animate-pulse drop-shadow-md">
-                ✨ To the hands that heal, the hearts that comfort, and the minds that inspire—Happy Doctors' Day 2025! 🩺
-              </h4>
-            </div>
-          </div>*/}
+          {/* 🍫 Chocolate Wafer Day Banner */}
+<div className="w-full bg-purple-900/80 rounded-xl shadow-2xl ring-2 ring-purple-500 overflow-hidden mb-6 animate-pulse">
+  <div className="relative w-full h-28">
+    <Image
+      src="https://i.postimg.cc/zfDwZ3p6/Whats-App-Image-2025-07-03-at-13-14-05-04e05e90.jpg" // Custom image link (upload your own if needed)
+      alt="Chocolate Wafer Day Banner"
+      fill
+      className="object-cover opacity-70"
+    />
+  </div>
+  <div className="text-center py-2 px-4 bg-purple-800/60 backdrop-blur-sm">
+    <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-red-500 drop-shadow-xl">
+      🍫 Happy Chocolate Wafer Day!
+    </h1>
+    <p className="mt-1 text-sm sm:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-blue-400 to-purple-500 drop-shadow-lg">
+      Take a sweet break and celebrate the crisp, chocolatey joy! 🧇🍫
+    </p>
+  </div>
+</div>
+
 
 
 

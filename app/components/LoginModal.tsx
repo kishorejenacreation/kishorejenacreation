@@ -136,18 +136,21 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     <AnimatePresence>
       {isOpen && visible && (
         <motion.div
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={handleClose}
         >
+          {/* Transparent background without close on click */}
+          <div className="absolute inset-0 bg-black/50"></div>
+
+          {/* Actual Modal */}
           <motion.div
-            className="bg-background rounded-2xl p-6 w-full max-w-md overflow-y-auto max-h-[90vh]"
+            className="relative z-10 bg-background rounded-2xl p-6 w-full max-w-md overflow-y-auto max-h-[90vh]"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // Prevent closing from inside
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">

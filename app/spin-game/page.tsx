@@ -1,6 +1,7 @@
 "use client"
 
-import { useAuth } from "@/components/AuthProvider" // or use "../../components/AuthProvider" if alias isn't working
+import { useAuth } from "app/components/AuthProvider"
+ // or use "../../components/AuthProvider" if alias isn't working
 import SpinWheel from "./SpinWheel"
 
 export default function SpinGamePage() {

@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "Kishore Jena Creation - Professional Editing Services & Music Platform",
-  description: "Professional editing services and online music streaming platform ",
+  description: "Professional editing services and online music streaming platform",
     generator: 'v0.dev'
 }
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { motion } from "framer-motion"
-import { BellIcon, UserIcon, CogIcon, MenuIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { BellIcon, UserIcon, CogIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { useAuth } from "./AuthProvider"
 import { useNotifications } from "./NotificationContext"
 import LoginModal from "./LoginModal"
@@ -63,8 +63,7 @@ export default function Header() {
             <LiveClock />
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex gap-x-8">
+          <div className="hidden md:flex gap-x-8">
             <Link href="#services" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Services</Link>
             <Link href="#about" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">About</Link>
             <Link href="#music" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Music</Link>
@@ -77,14 +76,13 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          <div className="md:hidden">
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-foreground">
-              {mobileMenuOpen ? <XMarkIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+              {mobileMenuOpen ? <XMarkIcon className="h-6 w-6" /> : <Bars3Icon className="h-6 w-6" />}
             </button>
           </div>
 
-          <div className="hidden lg:flex flex-1 justify-end items-center gap-4">
+          <div className="hidden md:flex flex-1 justify-end items-center gap-4">
             {user?.isAdmin && (
               <button onClick={() => setShowNotifications(!showNotifications)} className="relative rounded-full p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
                 <BellIcon className="h-5 w-5" />
@@ -121,9 +119,8 @@ export default function Header() {
           </div>
         </nav>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden px-6 pb-4 bg-background border-t border-border">
+          <div className="md:hidden px-6 pb-4 bg-background border-t border-border">
             <nav className="flex flex-col gap-4">
               <Link href="#services" onClick={() => setMobileMenuOpen(false)}>Services</Link>
               <Link href="#about" onClick={() => setMobileMenuOpen(false)}>About</Link>

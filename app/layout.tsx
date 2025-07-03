@@ -9,7 +9,7 @@ import { ProjectFormProvider } from "./components/ProjectFormContext"
 import { NotificationProvider } from "./components/NotificationContext"
 import MusicPlayer from "./components/MusicPlayer"
 import Chatbot from "./components/Chatbot"
-import type React from "react"
+import React from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 

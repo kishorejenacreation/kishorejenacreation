@@ -6,6 +6,16 @@ import Image from "next/image"
 
 export default function Hero() {
   const [currentTime, setCurrentTime] = useState(new Date())
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -44,99 +54,26 @@ export default function Hero() {
     <div className="relative isolate overflow-hidden bg-background">
       <div className="mx-auto max-w-7xl px-6 py-20 lg:flex lg:items-center lg:gap-x-10 lg:px-8">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-lg lg:flex-shrink-0">
-          {/* Time-based Greeting */}
-          <motion.div
-            className="mb-4 text-center lg:text-left"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center gap-3 bg-primary/10 rounded-full px-4 py-2">
-              <div className="text-2xl">
-                {getGreeting() === "Good Morning" && "🌅"}
-                {getGreeting() === "Good Afternoon" && "☀️"}
-                {getGreeting() === "Good Evening" && "🌃"}
-                {getGreeting() === "Good Night" && "🌙"}
-              </div>
-              <div>
-                <div className="text-sm font-medium text-primary">{getGreeting()}!</div>
-                <div className="text-xs text-muted-foreground">
-                  {formatTime(currentTime)} • {formatDate(currentTime)}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          {/* 🎉 Festival Banner */}
-              { /* 🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉           
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉 
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉 */}
 
           {/* 🍫 Chocolate Wafer Day Banner */}
-<div className="w-full bg-purple-900/80 rounded-xl shadow-2xl ring-2 ring-purple-500 overflow-hidden mb-6 animate-pulse">
-  <div className="relative w-full h-28">
-    <Image
-      src="https://i.postimg.cc/zfDwZ3p6/Whats-App-Image-2025-07-03-at-13-14-05-04e05e90.jpg" // Custom image link (upload your own if needed)
-      alt="Chocolate Wafer Day Banner"
-      fill
-      className="object-cover opacity-70"
-    />
-  </div>
-  <div className="text-center py-2 px-4 bg-purple-800/60 backdrop-blur-sm">
-    <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-red-500 drop-shadow-xl">
-      🍫 Happy Chocolate Wafer Day!
-    </h1>
-    <p className="mt-1 text-sm sm:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-blue-400 to-purple-500 drop-shadow-lg">
-      Take a sweet break and celebrate the crisp, chocolatey joy! 🧇🍫
-    </p>
-  </div>
-</div>
-
-
-
-
-                   {/* 🎉 Festival Banner */}
-              { /* 🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉           
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉 
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉
-  🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉🎉 */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          <div className="w-full bg-purple-900/80 rounded-xl shadow-2xl ring-2 ring-purple-500 overflow-hidden mb-6 animate-pulse">
+            <div className="relative w-full h-28">
+              <Image
+                src="https://i.postimg.cc/zfDwZ3p6/Whats-App-Image-2025-07-03-at-13-14-05-04e05e90.jpg"
+                alt="Chocolate Wafer Day Banner"
+                fill
+                className="object-cover opacity-70"
+              />
+            </div>
+            <div className="text-center py-2 px-4 bg-purple-800/60 backdrop-blur-sm">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-red-500 drop-shadow-xl">
+                🍫 Happy Chocolate Wafer Day!
+              </h1>
+              <p className="mt-1 text-sm sm:text-base font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-blue-400 to-purple-500 drop-shadow-lg">
+                Take a sweet break and celebrate the crisp, chocolatey joy! 🧇🍫
+              </p>
+            </div>
+          </div>
 
           {/* Main Title and Info */}
           <motion.h1
@@ -154,8 +91,9 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Professional editing services and online music streaming platform. From video editing to photo manipulation,
-            wedding invitations to thumbnail designs – we bring your creative vision to life with 50M+ English songs.
+            {isMobile
+              ? "Kishore Jena Creation - Editing & Music"
+              : "Professional editing services and online music streaming platform. From video editing to photo manipulation, wedding invitations to thumbnail designs – we bring your creative vision to life with 50M+ English songs."}
           </motion.p>
 
           <motion.div
@@ -181,8 +119,8 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <div className="relative">
-            <div className="w-[500px] h-[400px] rounded-2xl shadow-xl ring-1 ring-gray-900/10 bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center">
-              <div className="grid grid-cols-3 gap-8 text-6xl">
+            <div className="w-[300px] md:w-[500px] h-[250px] md:h-[400px] rounded-2xl shadow-xl ring-1 ring-gray-900/10 bg-gradient-to-br from-purple-500/20 to-purple-600/20 flex items-center justify-center">
+              <div className="grid grid-cols-3 gap-6 md:gap-8 text-4xl md:text-6xl">
                 <div className="text-purple-500">🎬</div>
                 <div className="text-purple-500">📸</div>
                 <div className="text-green-500">🎵</div>

@@ -72,7 +72,7 @@ export default function Hero() {
         <div className="mx-auto max-w-7xl px-6 py-20 lg:flex lg:items-center lg:gap-x-10 lg:px-8">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-lg lg:flex-shrink-0">
             {/* 🍫 Chocolate Wafer Day Banner */}
-            <div className="w-full bg-purple-900/80 rounded-xl shadow-2xl ring-2 ring-purple-500 overflow-hidden mb-6 animate-pulse">
+            {/* <div className="w-full bg-purple-900/80 rounded-xl shadow-2xl ring-2 ring-purple-500 overflow-hidden mb-6 animate-pulse">
               <div className="relative w-full h-28">
                 <Image
                   src="https://i.postimg.cc/zfDwZ3p6/Whats-App-Image-2025-07-03-at-13-14-05-04e05e90.jpg"
@@ -89,7 +89,7 @@ export default function Hero() {
                   Take a sweet break and celebrate the crisp, chocolatey joy! 🧇🍫
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {/* Main Title and Info */}
             <motion.h1

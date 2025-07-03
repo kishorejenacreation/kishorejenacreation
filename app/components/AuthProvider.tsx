@@ -51,7 +51,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           id: "admin",
           username: "kjcadmin",
           email: "jenakishore2006@gmail.com",
-          isAdmin: true
+          isAdmin: true,
         }
         setUser(adminUser)
         localStorage.setItem("kjc_user", JSON.stringify(adminUser))
@@ -59,17 +59,20 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Regular user login
-      const existing = JSON.parse(localStorage.getItem("kjc_user") || "{}")
+      const storedSignup = localStorage.getItem("kjc_signup_form")
+      if (!storedSignup) return false
+
+      const form = JSON.parse(storedSignup)
       const regularUser: User = {
-        id: existing.id || Date.now().toString(),
+        id: form.id || Date.now().toString(),
         email: emailOrUsername,
         isAdmin: false,
-        name: existing.name,
-        dob: existing.dob,
-        age: existing.age,
-        gender: existing.gender,
-        mobile: existing.mobile,
-        country: existing.country
+        name: form.name,
+        dob: form.dob,
+        age: form.age,
+        gender: form.gender,
+        mobile: form.mobile,
+        country: form.country,
       }
       setUser(regularUser)
       localStorage.setItem("kjc_user", JSON.stringify(regularUser))
@@ -82,24 +85,23 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const signup = async (email: string, password: string): Promise<boolean> => {
     try {
-      if (email && password.length >= 4) {
-        const form = JSON.parse(localStorage.getItem("kjc_signup_form") || "{}")
-        const newUser: User = {
-          id: Date.now().toString(),
-          email,
-          isAdmin: false,
-          name: form.name,
-          dob: form.dob,
-          age: form.age,
-          gender: form.gender,
-          mobile: form.mobile,
-          country: form.country
-        }
-        setUser(newUser)
-        localStorage.setItem("kjc_user", JSON.stringify(newUser))
-        return true
+      if (!email || password.length < 4) return false
+
+      const form = JSON.parse(localStorage.getItem("kjc_signup_form") || "{}")
+      const newUser: User = {
+        id: Date.now().toString(),
+        email,
+        isAdmin: false,
+        name: form.name,
+        dob: form.dob,
+        age: form.age,
+        gender: form.gender,
+        mobile: form.mobile,
+        country: form.country,
       }
-      return false
+      setUser(newUser)
+      localStorage.setItem("kjc_user", JSON.stringify(newUser))
+      return true
     } catch (err) {
       console.error("Signup error:", err)
       return false
@@ -118,7 +120,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         signup,
-        isAuthenticated: !!user
+        isAuthenticated: !!user,
       }}
     >
       {children}

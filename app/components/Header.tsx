@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { motion } from "framer-motion"
-import { BellIcon, UserIcon, CogIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import { BellIcon, UserIcon, CogIcon, Bars3Icon, XMarkIcon, GiftIcon } from "@heroicons/react/24/outline"
 import { useAuth } from "./AuthProvider"
 import { useNotifications } from "./NotificationContext"
 import LoginModal from "./LoginModal"
@@ -68,10 +68,12 @@ export default function Header() {
             <Link href="#about" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">About</Link>
             <Link href="#music" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Music</Link>
             <Link href="#reviews" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">Reviews</Link>
+            <Link href="/spin-game" className="text-sm font-semibold leading-6 text-yellow-500 hover:text-yellow-400 transition-colors flex items-center gap-1">
+              <GiftIcon className="h-4 w-4" /> Spin & Win
+            </Link>
             {user?.isAdmin && (
               <Link href="/admin" className="text-sm font-semibold leading-6 text-orange-600 hover:text-orange-500 transition-colors flex items-center gap-1">
-                <CogIcon className="h-4 w-4" />
-                Admin
+                <CogIcon className="h-4 w-4" /> Admin
               </Link>
             )}
           </div>
@@ -112,8 +114,7 @@ export default function Header() {
               </div>
             ) : (
               <button onClick={() => setShowLogin(true)} className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary transition-colors">
-                <UserIcon className="h-5 w-5" />
-                Login
+                <UserIcon className="h-5 w-5" /> Login
               </button>
             )}
           </div>
@@ -126,6 +127,7 @@ export default function Header() {
               <Link href="#about" onClick={() => setMobileMenuOpen(false)}>About</Link>
               <Link href="#music" onClick={() => setMobileMenuOpen(false)}>Music</Link>
               <Link href="#reviews" onClick={() => setMobileMenuOpen(false)}>Reviews</Link>
+              <Link href="/spin-game" onClick={() => setMobileMenuOpen(false)}>🎁 Spin & Win</Link>
               {user?.isAdmin && (
                 <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>Admin</Link>
               )}

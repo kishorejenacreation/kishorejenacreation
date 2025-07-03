@@ -7,6 +7,8 @@ import Image from "next/image"
 export default function Hero() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isMobile, setIsMobile] = useState(false)
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
+  const [isCameraActive, setIsCameraActive] = useState(false)
 
   useLayoutEffect(() => {
     const handleResize = () => {
@@ -47,6 +49,17 @@ export default function Hero() {
       day: "numeric",
       year: "numeric",
     })
+  }
+
+  const handleTakeSelfie = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      setCameraStream(stream)
+      setIsCameraActive(true)
+      // TODO: Display preview or capture frame from video stream
+    } catch (error) {
+      console.error("Camera permission denied or error:", error)
+    }
   }
 
   return (
@@ -107,6 +120,12 @@ export default function Hero() {
             <a href="#music" className="text-sm font-semibold leading-6 text-foreground">
               Listen Music <span aria-hidden="true">→</span>
             </a>
+            <button
+              onClick={handleTakeSelfie}
+              className="ml-4 px-4 py-2 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600"
+            >
+              📸 Take Selfie
+            </button>
           </motion.div>
         </div>
 

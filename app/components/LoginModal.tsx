@@ -44,7 +44,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [error, setError] = useState("")
   const [visible, setVisible] = useState(true)
 
-  const { login, signup } = useAuth()
+  const authContext = useAuth()
+  const { login, signup } = authContext
+
+  console.log("🔐 LoginModal loaded with AuthContext:", authContext) // ✅ Added debug log
+
   const options = countryList().getData()
 
   useEffect(() => {
@@ -123,7 +127,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         onClose()
         localStorage.removeItem("popup_cancel_time")
       } else {
-        setError(isLogin ? "Invalid admin credentials. Contact developer." : "Signup failed. Please try again.")
+        setError(isLogin ? "Invalid admin credentials." : "Signup failed.")
       }
     } catch {
       setError("An error occurred")
@@ -141,16 +145,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Transparent background without close on click */}
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-black/50" />
 
-          {/* Actual Modal */}
           <motion.div
             className="relative z-10 bg-background rounded-2xl p-6 w-full max-w-md overflow-y-auto max-h-[90vh]"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            onClick={(e) => e.stopPropagation()} // Prevent closing from inside
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">
@@ -260,28 +262,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       onChange={setCountry}
                       className="text-sm"
                       formatOptionLabel={formatOptionLabel}
-                      styles={{
-                        control: (base) => ({
-                          ...base,
-                          backgroundColor: "yellow",
-                          borderColor: "#ccc",
-                          color: "black",
-                        }),
-                        option: (base, state) => ({
-                          ...base,
-                          backgroundColor: state.isFocused ? "#facc15" : "yellow",
-                          color: "black",
-                          cursor: "pointer",
-                        }),
-                        singleValue: (base) => ({
-                          ...base,
-                          color: "black",
-                        }),
-                        menu: (base) => ({
-                          ...base,
-                          backgroundColor: "yellow",
-                        }),
-                      }}
                     />
                   </div>
                 </>

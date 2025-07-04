@@ -1,14 +1,14 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
-import { AuthProvider } from "./components/AuthProvider"; // ✅ Corrected import path
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { MusicProvider } from "./components/MusicContext";
-import { ProjectFormProvider } from "./components/ProjectFormContext";
-import { NotificationProvider } from "./components/NotificationContext";
-import MusicPlayer from "./components/MusicPlayer";
-import Chatbot from "./components/Chatbot";
+import { ThemeProvider } from "../components/theme-provider"; // relative import
+import { AuthProvider } from "../components/AuthProvider"; // FIXED: relative import
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { MusicProvider } from "../components/MusicContext";
+import { ProjectFormProvider } from "../components/ProjectFormContext";
+import { NotificationProvider } from "../components/NotificationContext";
+import MusicPlayer from "../components/MusicPlayer";
+import Chatbot from "../components/Chatbot";
 import React from "react";
 
 const inter = Inter({ subsets: ["latin"] });

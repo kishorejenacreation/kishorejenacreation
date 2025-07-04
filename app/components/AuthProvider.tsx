@@ -1,3 +1,5 @@
+// /components/AuthProvider.tsx
+
 "use client";
 
 import {
@@ -8,7 +10,6 @@ import {
   type ReactNode,
 } from "react";
 
-// Define the user object structure
 interface User {
   id: string;
   email?: string;
@@ -16,21 +17,17 @@ interface User {
   isAdmin: boolean;
 }
 
-// Context type that holds user data and login/logout methods
 interface AuthContextType {
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
 }
 
-// Create the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Export the AuthProvider wrapper
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  // On page load, check if user data is stored
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -43,13 +40,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Save user to state and localStorage
   const login = (user: User) => {
     setUser(user);
     localStorage.setItem("user", JSON.stringify(user));
   };
 
-  // Clear user from state and localStorage
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -62,7 +57,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook for accessing the auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

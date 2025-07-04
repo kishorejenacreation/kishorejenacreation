@@ -1,28 +1,59 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/components/AuthProvider"
-import SpinWheel from "./SpinWheel"
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
-export default function SpinGamePage() {
-  const { user } = useAuth()
+interface User {
+  id: string;
+  email?: string;
+  username?: string;
+  isAdmin: boolean;
+}
 
-  const handleWin = (reward: string) => {
-    alert(`🎉 Congratulations!\nYou won: ${reward}`)
-  }
+interface AuthContextType {
+  user: User | null;
+  login: (user: User) => void;
+  logout: () => void;
+}
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-center px-4">
-        <div className="text-lg font-semibold text-red-600">
-          Please <span className="text-primary underline">login</span> to spin the wheel.
-        </div>
-      </div>
-    )
-  }
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const login = (user: User) => {
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <SpinWheel userId={user.id} onWin={handleWin} />
-    </div>
-  )
-}
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};

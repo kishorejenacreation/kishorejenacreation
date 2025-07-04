@@ -1,28 +1,28 @@
-import "./globals.css"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
-import Header from "./components/Header"
-import Footer from "./components/Footer"
-import AuthProvider from "./components/AuthProvider"
-import { MusicProvider } from "./components/MusicContext"
-import { ProjectFormProvider } from "./components/ProjectFormContext"
-import { NotificationProvider } from "./components/NotificationContext"
-import MusicPlayer from "./components/MusicPlayer"
-import Chatbot from "./components/Chatbot"
-import React from "react"
+import "./globals.css";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "./components/AuthProvider"; // ✅ Corrected import path
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import { MusicProvider } from "./components/MusicContext";
+import { ProjectFormProvider } from "./components/ProjectFormContext";
+import { NotificationProvider } from "./components/NotificationContext";
+import MusicPlayer from "./components/MusicPlayer";
+import Chatbot from "./components/Chatbot";
+import React from "react";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Kishore Jena Creation - Professional Editing Services & Music Platform",
   description: "Professional editing services and online music streaming platform",
     generator: 'v0.dev'
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -40,7 +40,10 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen bg-background text-foreground`} suppressHydrationWarning>
+      <body
+        className={`${inter.className} min-h-screen bg-background text-foreground`}
+        suppressHydrationWarning
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <NotificationProvider>
@@ -58,5 +61,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

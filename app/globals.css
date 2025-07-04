@@ -53,9 +53,31 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* ✅ Make login/signup forms responsive */
+  .auth-form {
+    @apply w-full max-w-md mx-auto px-4 py-6 bg-card rounded-lg shadow-md;
+  }
+
+  /* ✅ Ensure container adapts on all screen sizes */
+  .responsive-container {
+    @apply w-full px-4 sm:px-6 md:px-8;
+  }
+
+  /* ✅ Fix hiding issues for mobile */
+  .mobile-visible {
+    @apply block sm:block;
+  }
+
+  /* ✅ Avoid overflow on small devices */
+  html,
+  body {
+    @apply overflow-x-hidden;
   }
 }
 

@@ -1,11 +1,13 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 import Select from "react-select"
 import countryList from "react-select-country-list"
 
@@ -57,10 +59,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       const diff = Date.now() - Number(canceledAt)
       if (diff < 3 * 60 * 1000) {
         setVisible(false)
-        const timeout = setTimeout(() => {
-          setVisible(true)
-          localStorage.removeItem("popup_cancel_time")
-        }, 3 * 60 * 1000 - diff)
+        const timeout = setTimeout(
+          () => {
+            setVisible(true)
+            localStorage.removeItem("popup_cancel_time")
+          },
+          3 * 60 * 1000 - diff,
+        )
         return () => clearTimeout(timeout)
       }
     }
@@ -90,9 +95,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     }
 
     try {
-      const success = isLogin
-        ? await login(emailOrUsername, password)
-        : await signup(emailOrUsername, password)
+      const success = isLogin ? await login(emailOrUsername, password) : await signup(emailOrUsername, password)
 
       if (success) {
         if (!isLogin) {
@@ -155,9 +158,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">
-                {isLogin ? "🔐 Login (Admin Only)" : "🎉 Sign Up"}
-              </h2>
+              <h2 className="text-2xl font-bold">{isLogin ? "🔐 Login (Admin Only)" : "🎉 Sign Up"}</h2>
               <button onClick={handleClose} className="text-muted-foreground hover:text-foreground">
                 <XMarkIcon className="h-6 w-6" />
               </button>
@@ -179,12 +180,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
               <div>
                 <label className="block text-sm font-medium mb-1">Password</label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
               </div>
 
               {!isLogin && (
@@ -201,31 +197,17 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
                   <div>
                     <label className="block text-sm font-medium mb-1">Full Name</label>
-                    <Input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                    />
+                    <Input value={name} onChange={(e) => setName(e.target.value)} required />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="block text-sm font-medium mb-1">Date Of Birth</label>
-                      <Input
-                        type="date"
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                        required
-                      />
+                      <Input type="date" value={dob} onChange={(e) => setDob(e.target.value)} required />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Age</label>
-                      <Input
-                        type="number"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        required
-                      />
+                      <Input type="number" value={age} onChange={(e) => setAge(e.target.value)} required />
                     </div>
                   </div>
 
@@ -246,11 +228,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">Mobile</label>
-                      <Input
-                        value={mobile}
-                        onChange={(e) => setMobile(e.target.value)}
-                        required
-                      />
+                      <Input value={mobile} onChange={(e) => setMobile(e.target.value)} required />
                     </div>
                   </div>
 
@@ -275,10 +253,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </form>
 
             <div className="mt-4 text-center">
-              <button
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-primary hover:underline text-sm"
-              >
+              <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline text-sm">
                 {isLogin ? "New user? Sign up here." : "If you're admin, login here."}
               </button>
             </div>

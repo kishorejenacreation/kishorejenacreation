@@ -8,7 +8,7 @@ import { XMarkIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 import { useProjectForm } from "./ProjectFormContext"
 import { sendProjectRequest, sendEmailFallback } from "./EmailService"
 
@@ -44,7 +44,9 @@ export default function WearYourStory() {
       const result = await sendProjectRequest(formData)
 
       if (result.success) {
-        alert("Thank you! Your project request has been sent successfully. We'll contact you within 24 hours. If technically issue, you can contact with creator email id.(i.e. mentioned on the creator's about section)")
+        alert(
+          "Thank you! Your project request has been sent successfully. We'll contact you within 24 hours. If technically issue, you can contact with creator email id.(i.e. mentioned on the creator's about section)",
+        )
 
         // Update user stats
         if (user) {

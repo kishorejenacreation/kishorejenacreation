@@ -1,9 +1,8 @@
-// ======= FRONTEND: Chatbot.tsx =======
 "use client"
 
 import { useState, useRef, useEffect } from "react"
 import { PaperAirplaneIcon, ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 
 interface Message {
   id: string
@@ -14,10 +13,9 @@ interface Message {
   mediaDownload?: string
 }
 
-function getBotReplyOrMedia(input: string):
-  | { type: "media"; platform: string; embedUrl: string; downloadUrl: string }
-  | { type: "text"; reply: string }
-  | null {
+function getBotReplyOrMedia(
+  input: string,
+): { type: "media"; platform: string; embedUrl: string; downloadUrl: string } | { type: "text"; reply: string } | null {
   const message = input.toLowerCase().trim()
 
   if (message.includes("today") && message.includes("date")) {
@@ -69,16 +67,15 @@ function getBotReplyOrMedia(input: string):
   }
 
   const instaMatch = input.match(/(?:instagram\.com\/(?:reel|p|tv)\/)([\w-]+)/)
-if (instaMatch) {
-  const code = instaMatch[1]
-  return {
-    type: "media",
-    platform: "Instagram",
-    embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
-    downloadUrl: `/api/download/instagram?url=https://www.instagram.com/reel/${code}/`,
+  if (instaMatch) {
+    const code = instaMatch[1]
+    return {
+      type: "media",
+      platform: "Instagram",
+      embedUrl: `https://www.instagram.com/reel/${code}/embed/`,
+      downloadUrl: `/api/download/instagram?url=https://www.instagram.com/reel/${code}/`,
+    }
   }
-}
-
 
   const teraMatch = input.match(/terabox\.com\/s\/([\w-]+)/)
   if (teraMatch) {
@@ -246,10 +243,7 @@ export default function Chatbot() {
 
       {isOpen && (
         <div className="fixed bottom-4 left-4 w-96 bg-white border rounded-xl shadow-lg p-4 z-50 relative">
-          <button
-            className="absolute top-2 right-2 text-lg hover:text-red-600"
-            onClick={() => setIsOpen(false)}
-          >
+          <button className="absolute top-2 right-2 text-lg hover:text-red-600" onClick={() => setIsOpen(false)}>
             ❌
           </button>
 
@@ -258,7 +252,7 @@ export default function Chatbot() {
               <div
                 key={msg.id}
                 className={`text-sm font-semibold p-3 rounded-lg leading-relaxed shadow-sm ${
-                  msg.isBot ? 'bg-pink-100 text-black' : 'bg-blue-600 text-white text-right'
+                  msg.isBot ? "bg-pink-100 text-black" : "bg-blue-600 text-white text-right"
                 }`}
               >
                 {msg.text}

@@ -1,4 +1,3 @@
-// components/Header.tsx
 "use client"
 
 import Link from "next/link"
@@ -9,26 +8,16 @@ export default function Header() {
 
   return (
     <header className="w-full bg-blue-600 text-white shadow-md px-6 py-4 flex justify-between items-center">
-      <Link href="/" className="text-xl font-bold">
-        Kishore Jena Creation
-      </Link>
-
+      <Link href="/" className="text-xl font-bold">Kishore Jena Creation</Link>
       <nav className="space-x-4">
-        <Link href="/about" className="hover:underline">About</Link>
-        <Link href="/services" className="hover:underline">Services</Link>
-        <Link href="/spin-game" className="hover:underline">Spin & Win</Link>
-        <Link href="/contact" className="hover:underline">Contact</Link>
+        <Link href="/about">About</Link>
+        <Link href="/services">Services</Link>
+        <Link href="/spin-game">Spin & Win</Link>
+        <Link href="/contact">Contact</Link>
         {user ? (
-          <button
-            onClick={logout}
-            className="bg-white text-blue-600 px-3 py-1 rounded hover:bg-gray-200"
-          >
-            Logout
-          </button>
+          <button onClick={logout} className="bg-white text-blue-600 px-3 py-1 rounded">Logout</button>
         ) : (
-          <Link href="/login" className="bg-white text-blue-600 px-3 py-1 rounded hover:bg-gray-200">
-            Login
-          </Link>
+          <Link href="/login" className="bg-white text-blue-600 px-3 py-1 rounded">Login</Link>
         )}
       </nav>
     </header>

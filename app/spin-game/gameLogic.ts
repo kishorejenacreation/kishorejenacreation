@@ -52,32 +52,20 @@ export function getRandomReward(): string {
 
   switch (reward) {
     case "🎁 Amazon Gift Card":
-      return `${reward} – Code: ${amazonGiftCodes[Math.floor(Math.random() * amazonGiftCodes.length)]}`
+      return `${reward} – Code: ${randomCode(amazonGiftCodes)}`
     case "🎧 Spotify Premium":
-      return `${reward} – Code: ${spotifyCodes[Math.floor(Math.random() * spotifyCodes.length)]}`
+      return `${reward} – Code: ${randomCode(spotifyCodes)}`
     case "🤑 ₹100 Zomato":
-      return `${reward} – Code: ${zomatoCodes[Math.floor(Math.random() * zomatoCodes.length)]}`
+      return `${reward} – Code: ${randomCode(zomatoCodes)}`
     case "📦 Free Delivery":
-      return `${reward} – Code: ${deliveryCodes[Math.floor(Math.random() * deliveryCodes.length)]}`
+      return `${reward} – Code: ${randomCode(deliveryCodes)}`
     case "💰 50% Cashback on Amazon":
-      return `${reward} – Code: ${cashbackCodes[Math.floor(Math.random() * cashbackCodes.length)]}`
+      return `${reward} – Code: ${randomCode(cashbackCodes)}`
     default:
       return reward
   }
 }
 
-export function registerSpin(userId: string) {
-  console.log(`Spin registered for user: ${userId}`)
-  // Implement Firebase or DB logic here
-}
-
-export function checkSpinEligibility(userId: string): boolean {
-  console.log(`Checking spin eligibility for ${userId}`)
-  // Simulate true; add DB logic later
-  return true
-}
-
-export function updateUserSpinStatus(userId: string) {
-  console.log(`User ${userId} spin status updated.`)
-  // Update backend spin status
+function randomCode(list: string[]) {
+  return list[Math.floor(Math.random() * list.length)]
 }

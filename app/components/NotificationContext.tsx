@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 
 interface Notification {
   id: string

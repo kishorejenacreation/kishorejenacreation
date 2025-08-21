@@ -2,19 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { useAuth } from "../components/AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 import {
   PencilIcon,
   EyeIcon,
   ArrowDownTrayIcon, // ✅ Correct icon used for save
   XMarkIcon,
-  DocumentTextIcon,
-  PhotoIcon,
-  MusicalNoteIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  CogIcon,
 } from "@heroicons/react/24/outline"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -177,11 +170,11 @@ export default function AdminPage() {
               <div className="space-y-2">
                 <Input
                   value={editForm?.title || ""}
-                  onChange={(e) => setEditForm((prev) => prev ? { ...prev, title: e.target.value } : null)}
+                  onChange={(e) => setEditForm((prev) => (prev ? { ...prev, title: e.target.value } : null))}
                 />
                 <Textarea
                   value={editForm?.content || ""}
-                  onChange={(e) => setEditForm((prev) => prev ? { ...prev, content: e.target.value } : null)}
+                  onChange={(e) => setEditForm((prev) => (prev ? { ...prev, content: e.target.value } : null))}
                 />
               </div>
             ) : (

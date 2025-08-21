@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { UserPlusIcon, UserMinusIcon, EnvelopeIcon } from "@heroicons/react/24/outline"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 import { useNotifications } from "./NotificationContext"
 
 export default function FollowButton() {

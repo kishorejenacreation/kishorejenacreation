@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { useAuth } from "./AuthProvider"
+import { useAuth } from "@/components/AuthProvider"
 import {
   UserIcon,
   EnvelopeIcon,

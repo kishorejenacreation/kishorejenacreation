@@ -5,9 +5,10 @@ import {
   useContext,
   useEffect,
   useState,
-  type ReactNode
+  type ReactNode,
 } from "react";
 
+// 👤 User structure
 interface User {
   id: string;
   email?: string;
@@ -15,14 +16,18 @@ interface User {
   isAdmin: boolean;
 }
 
+// 🔐 Context type
 interface AuthContextType {
   user: User | null;
-  login: (user: User) => void;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  signup: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// 🧠 Create context
+const AuthContext = createContext<AuthContextType | null>(null);
 
+// 🏗️ AuthProvider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
@@ -30,17 +35,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse stored user:", error);
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (err) {
+        console.error("Error parsing stored user data:", err);
         localStorage.removeItem("user");
       }
     }
   }, []);
 
-  const login = (user: User) => {
+  const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
+    if (emailOrUsername === "kjcadmin" && password === "kjc2005") {
+      const user: User = {
+        id: "1",
+        email: emailOrUsername,
+        username: "Admin",
+        isAdmin: true,
+      };
+      setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      return true;
+    }
+    return false;
+  };
+
+  const signup = async (email: string, password: string): Promise<boolean> => {
+    const user: User = {
+      id: "2",
+      email,
+      username: "User",
+      isAdmin: false,
+    };
     setUser(user);
     localStorage.setItem("user", JSON.stringify(user));
+    return true;
   };
 
   const logout = () => {
@@ -49,15 +77,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// ✅ Hook to access auth
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  console.log("📦 useAuth() called. Context value:", context);
   if (!context) {
     throw new Error("useAuth must be used within an AuthProvider");
   }

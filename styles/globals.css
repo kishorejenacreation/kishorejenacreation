@@ -1,4 +1,4 @@
-// File: styles/globals.css
+/* Removed invalid JavaScript-style comment that was causing build failure */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (emailOrUsername: string, password: string): Promise<boolean> => {
+    // Admin login check
     if (emailOrUsername === "kjcadmin" && password === "kjc2005") {
       const user: User = {
         id: "1",

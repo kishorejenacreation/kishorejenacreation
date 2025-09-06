@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 
   try {
     // Using on4t service to generate MP4 link
-    const response = await fetch(`https://on4t.com/tools/instagram-video-downloader`, {
+    const response = await fetch(`https://iqsaved.com/video/#:~:text=Use%20same%20link%20to%20download%20videos%20from%20Instagram%3A,%E2%80%93%20no%20sign-up%2C%20no%20software%2C%20and%20completely%20free.`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer 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`, // ✅ Don't hardcode it
+      Authorization: `Bearer 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`, // ✅ Don't hardcode it
     },
     body: JSON.stringify({
       model: "gpt-3.5-turbo",

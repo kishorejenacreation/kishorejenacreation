@@ -1,157 +1,115 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
-import { useAuth } from "../components/AuthProvider"
-import {
-  PencilIcon,
-  EyeIcon,
-  ArrowDownTrayIcon, // ✅ Correct icon used for save
-  XMarkIcon,
-  DocumentTextIcon,
-  PhotoIcon,
-  MusicalNoteIcon,
-  UserGroupIcon,
-  ChartBarIcon,
-  CogIcon,
-} from "@heroicons/react/24/outline"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect, useContext, createContext, ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { PencilIcon, EyeIcon, ArrowDownTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+
+// ---------------- AuthProvider (inside same file) ----------------
+
+interface User {
+  id: string;
+  email?: string;
+  username?: string;
+  isAdmin: boolean;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (emailOrUsername: string, password: string) => Promise<boolean>;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
+
+  const login = async (emailOrUsername: string, password: string) => {
+    if (emailOrUsername === "kjcadmin" && password === "kjc2005") {
+      const admin: User = { id: "1", email: emailOrUsername, username: "Admin", isAdmin: true };
+      setUser(admin);
+      localStorage.setItem("user", JSON.stringify(admin));
+      return true;
+    }
+    return false;
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+};
+
+const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
+};
+
+// ---------------- Admin Page ----------------
 
 interface PageContent {
-  id: string
-  title: string
-  description: string
-  content: string
-  lastModified: string
+  id: string;
+  title: string;
+  content: string;
+  lastModified: string;
 }
 
 const initialContent: PageContent[] = [
-  {
-    id: "hero",
-    title: "Hero Section",
-    description: "Main landing page content",
-    content: "Kishore Jena Creation - Professional editing services and online music streaming platform",
-    lastModified: new Date().toISOString(),
-  },
-  {
-    id: "services",
-    title: "Services Section",
-    description: "List of services offered",
-    content: "Video Editing, Photo Editing, Thumbnail Design, Wedding Invitations, Graphic Design, Audio Editing",
-    lastModified: new Date().toISOString(),
-  },
-  {
-    id: "about",
-    title: "About Section",
-    description: "About Kishore Jena and the company",
-    content: "Kishore Jena is a passionate digital content creator with 5+ years of experience...",
-    lastModified: new Date().toISOString(),
-  },
-  {
-    id: "music",
-    title: "Music Platform",
-    description: "Music streaming platform details",
-    content: "50M+ English songs including latest hits, pop music, romantic songs, and classic tracks",
-    lastModified: new Date().toISOString(),
-  },
-]
+  { id: "hero", title: "Hero Section", content: "Kishore Jena Creation - Professional editing & music streaming", lastModified: new Date().toISOString() },
+  { id: "services", title: "Services Section", content: "Video Editing, Photo Editing, Thumbnails, Invitations, Graphic Design, Audio Editing", lastModified: new Date().toISOString() },
+  { id: "about", title: "About Section", content: "Kishore Jena is a passionate digital content creator with 5+ years experience...", lastModified: new Date().toISOString() },
+];
 
 export default function AdminPage() {
-  const { user, isAuthenticated } = useAuth()
-  const router = useRouter()
-  const [content, setContent] = useState<PageContent[]>(initialContent)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editForm, setEditForm] = useState<PageContent | null>(null)
-  const [stats, setStats] = useState({
-    totalUsers: 1247,
-    totalSongs: 50000000,
-    totalProjects: 156,
-    monthlyViews: 45230,
-  })
+  return (
+    <AuthProvider>
+      <AdminPageContent />
+    </AuthProvider>
+  );
+}
 
-  const [userAnalytics, setUserAnalytics] = useState({
-    totalLogins: 0,
-    loggedInUsers: [],
-    followers: [],
-    recentActivity: [],
-  })
+function AdminPageContent() {
+  const { user, logout } = useAuth();
+  const router = useRouter();
+  const [content, setContent] = useState<PageContent[]>(initialContent);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<PageContent | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated || !user?.isAdmin) {
-      router.push("/")
-      return
-    }
+    if (!user?.isAdmin) router.push("/");
+    const saved = localStorage.getItem("kjc_admin_content");
+    if (saved) setContent(JSON.parse(saved));
+  }, [user, router]);
 
-    const savedContent = localStorage.getItem("kjc_admin_content")
-    if (savedContent) {
-      setContent(JSON.parse(savedContent))
-    }
-  }, [isAuthenticated, user, router])
-
-  useEffect(() => {
-    if (user?.isAdmin) {
-      const loginData = JSON.parse(localStorage.getItem("kjc_user_logins") || "[]")
-      const followerData = JSON.parse(localStorage.getItem("kjc_admin_notifications") || "[]").filter((notif) =>
-        notif.title.includes("New Follower"),
-      )
-
-      setUserAnalytics({
-        totalLogins: loginData.length,
-        loggedInUsers: loginData,
-        followers: followerData,
-        recentActivity: [...loginData, ...followerData]
-          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-          .slice(0, 10),
-      })
-    }
-  }, [user])
-
-  const handleEdit = (item: PageContent) => {
-    setEditingId(item.id)
-    setEditForm({ ...item })
-  }
-
+  const handleEdit = (item: PageContent) => { setEditingId(item.id); setEditForm({ ...item }); };
   const handleSave = () => {
-    if (!editForm) return
+    if (!editForm) return;
+    const updated = content.map((i) => (i.id === editForm.id ? { ...editForm, lastModified: new Date().toISOString() } : i));
+    setContent(updated);
+    localStorage.setItem("kjc_admin_content", JSON.stringify(updated));
+    setEditingId(null);
+    setEditForm(null);
+    alert("✅ Content updated!");
+  };
+  const handleCancel = () => { setEditingId(null); setEditForm(null); };
+  const handlePublish = () => alert("🚀 Website published!");
 
-    const updatedContent = content.map((item) =>
-      item.id === editForm.id ? { ...editForm, lastModified: new Date().toISOString() } : item,
-    )
-
-    setContent(updatedContent)
-    localStorage.setItem("kjc_admin_content", JSON.stringify(updatedContent))
-    setEditingId(null)
-    setEditForm(null)
-
-    alert("✅ Content updated successfully!")
-  }
-
-  const handleCancel = () => {
-    setEditingId(null)
-    setEditForm(null)
-  }
-
-  const handlePublish = () => {
-    alert("🚀 Website published successfully! Changes are now live.")
-  }
-
-  if (!isAuthenticated || !user?.isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
-          <p className="text-muted-foreground">You need admin privileges to access this page.</p>
-        </div>
-      </div>
-    )
-  }
+  if (!user?.isAdmin) return <div className="min-h-screen flex items-center justify-center text-red-600 font-bold">Access Denied</div>;
 
   return (
-    <div className="min-h-screen bg-background py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-8 px-4">
+      <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">🛠️ Admin Panel</h1>
         {content.map((section) => (
           <div key={section.id} className="mb-6 p-4 border rounded-xl shadow-sm bg-white dark:bg-gray-900">
@@ -159,30 +117,17 @@ export default function AdminPage() {
               <h2 className="text-xl font-semibold">{section.title}</h2>
               {editingId === section.id ? (
                 <div className="space-x-2">
-                  <Button onClick={handleSave}>
-                    <ArrowDownTrayIcon className="w-5 h-5 inline mr-1" /> Save
-                  </Button>
-                  <Button variant="destructive" onClick={handleCancel}>
-                    <XMarkIcon className="w-5 h-5 inline mr-1" /> Cancel
-                  </Button>
+                  <Button onClick={handleSave}><ArrowDownTrayIcon className="w-5 h-5 inline mr-1" /> Save</Button>
+                  <Button variant="destructive" onClick={handleCancel}><XMarkIcon className="w-5 h-5 inline mr-1" /> Cancel</Button>
                 </div>
               ) : (
-                <Button onClick={() => handleEdit(section)}>
-                  <PencilIcon className="w-5 h-5 inline mr-1" /> Edit
-                </Button>
+                <Button onClick={() => handleEdit(section)}><PencilIcon className="w-5 h-5 inline mr-1" /> Edit</Button>
               )}
             </div>
-
             {editingId === section.id ? (
               <div className="space-y-2">
-                <Input
-                  value={editForm?.title || ""}
-                  onChange={(e) => setEditForm((prev) => prev ? { ...prev, title: e.target.value } : null)}
-                />
-                <Textarea
-                  value={editForm?.content || ""}
-                  onChange={(e) => setEditForm((prev) => prev ? { ...prev, content: e.target.value } : null)}
-                />
+                <Input value={editForm?.title || ""} onChange={(e) => setEditForm((p) => p ? { ...p, title: e.target.value } : null)} />
+                <Textarea value={editForm?.content || ""} onChange={(e) => setEditForm((p) => p ? { ...p, content: e.target.value } : null)} />
               </div>
             ) : (
               <p className="text-muted-foreground">{section.content}</p>
@@ -190,11 +135,10 @@ export default function AdminPage() {
           </div>
         ))}
         <div className="mt-8">
-          <Button onClick={handlePublish}>
-            <EyeIcon className="w-5 h-5 inline mr-1" /> Publish Website
-          </Button>
+          <Button onClick={handlePublish}><EyeIcon className="w-5 h-5 inline mr-1" /> Publish Website</Button>
+          <Button className="ml-4 bg-red-500" onClick={logout}>Logout</Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

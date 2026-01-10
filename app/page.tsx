@@ -17,7 +17,6 @@ export default function Page() {
 
   useEffect(() => {
     setMounted(true)
-    // Check for saved theme preference
     const savedTheme = localStorage.getItem("theme")
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
@@ -38,7 +37,7 @@ export default function Page() {
   if (!mounted) return null
 
   return (
-    <main className="bg-background text-foreground">
+    <main className="text-foreground">
       <ThemeToggle />
       <Navbar onNavClick={handleNavClick} />
 

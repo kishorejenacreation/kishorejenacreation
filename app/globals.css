@@ -121,25 +121,26 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    /* Enhanced gradient background with deep purple and blue moving animation */
+    background: linear-gradient(135deg, #1a0f3f 0%, #2d1b69 25%, #1e0a4d 50%, #3d2a7f 75%, #1a0f3f 100%);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+    min-height: 100vh;
   }
 }
 
-/* Add gradient background animation */
+/* Updated gradient animation for slower, more fluid movement */
 @keyframes gradient-shift {
-  0%,
-  100% {
+  0% {
     background-position: 0% 50%;
   }
   50% {
     background-position: 100% 50%;
   }
-}
-
-.gradient-animate {
-  background: linear-gradient(135deg, #2d1b69 0%, #6b4fa8 50%, #3d1b5f 100%);
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .glass-effect {

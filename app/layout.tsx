@@ -12,21 +12,8 @@ export const metadata: Metadata = {
   description: "A premium technical event experience with cutting-edge innovations",
   generator: "v0.app",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+    icon: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
+    apple: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
   },
 }
 

@@ -1,106 +1,56 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Navbar } from "@/components/navbar"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { HomeSection } from "@/components/home-section"
+import { UpdatesSection } from "@/components/updates-section"
+import { EventsSection } from "@/components/events-section"
+import { EDMSection } from "@/components/edm-section"
+import { SponsorsSection } from "@/components/sponsors-section"
+import { TeamsSection } from "@/components/teams-section"
+import { AboutSection } from "@/components/about-section"
+import { Footer } from "@/components/footer"
 
-// UI Components
-import LiveClock from "@/components/LiveClock"
-import Chatbot from "@/components/Chatbot"
-import FollowButton from "@/components/FollowButton"
-import SignupDashboard from "@/components/SignupDashboard"
-import LoginModal from "@/components/LoginModal"
-
-// Contexts
-import { ProjectFormProvider } from "@/components/ProjectFormContext"
-import { NotificationProvider } from "@/components/NotificationContext"
-
-// Sections
-import Hero from "@/components/Hero"
-import Services from "@/components/Services"
-import AboutSection from "@/components/AboutSection"
-import MusicSection from "@/components/MusicSection"
-import ReviewSection from "@/components/ReviewSection"
-import Timeline from "@/components/Timeline"
-import Marquee from "@/components/Marquee"
-import WearYourStory from "@/components/WearYourStory"
-import UpdatesSection from "@/components/UpdatesSection"
-import Contact from "@/components/Contact"
-
-export default function Home() {
-  const [showPopup, setShowPopup] = useState(false)
+export default function Page() {
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const checkAndShowPopup = () => {
-      const cancelTime = localStorage.getItem("popup_cancel_time")
-      const waitTime = 3 * 60 * 1000 // 3 minutes
+    setMounted(true)
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem("theme")
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
 
-      if (!cancelTime) {
-        setShowPopup(true)
-      } else {
-        const timePassed = Date.now() - parseInt(cancelTime, 10)
-        if (timePassed >= waitTime) {
-          setShowPopup(true)
-          localStorage.removeItem("popup_cancel_time")
-        } else {
-          const remaining = waitTime - timePassed
-          setTimeout(() => {
-            setShowPopup(true)
-            localStorage.removeItem("popup_cancel_time")
-          }, remaining)
-        }
-      }
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
     }
-
-    checkAndShowPopup()
-
-    const interval = setInterval(() => {
-      checkAndShowPopup()
-    }, 3 * 60 * 1000)
-
-    return () => clearInterval(interval)
   }, [])
 
+  const handleNavClick = (sectionId: string) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  if (!mounted) return null
+
   return (
-    <NotificationProvider>
-      <ProjectFormProvider>
-        <main className="bg-[#1c012e] text-white min-h-screen">
-          {/* Login Popup */}
-          <LoginModal
-            isOpen={showPopup}
-            onClose={() => {
-              localStorage.setItem("popup_cancel_time", Date.now().toString())
-              setShowPopup(false)
-            }}
-          />
+    <main className="bg-background text-foreground">
+      <ThemeToggle />
+      <Navbar onNavClick={handleNavClick} />
 
-          {/* Clock */}
-          <div className="flex justify-center py-4">
-            <LiveClock />
-          </div>
+      <HomeSection />
+      <UpdatesSection />
+      <EventsSection />
+      <EDMSection />
+      <SponsorsSection />
+      <TeamsSection />
+      <AboutSection />
 
-          {/* Main Sections */}
-          <Hero />
-          <Services />
-          <AboutSection />
-          <MusicSection />
-          <ReviewSection />
-          <Timeline />
-          <Marquee />
-          <WearYourStory />
-          <UpdatesSection />
-          <Contact />
-
-          {/* Follow Button */}
-          <div className="py-10 px-4 sm:px-6 lg:px-8">
-            <div className="container mx-auto max-w-md">
-              <FollowButton />
-            </div>
-          </div>
-
-          {/* Chatbot & Signup */}
-          <Chatbot />
-          <SignupDashboard />
-        </main>
-      </ProjectFormProvider>
-    </NotificationProvider>
+      <Footer />
+    </main>
   )
 }

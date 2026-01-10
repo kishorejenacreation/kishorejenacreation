@@ -1,40 +1,45 @@
-import "@/styles/globals.css"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "next-themes"
+import type React from "react"
+import type { Metadata } from "next"
+import { Geist, Geist_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
 
-import Header from "@/components/Header" // ✅ added
-import Footer from "@/components/Footer" // ✅ added
+const _geist = Geist({ subsets: ["latin"] })
+const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
-import { AuthProvider } from "@/components/AuthProvider"
-import { NotificationProvider } from "@/components/NotificationProvider"
-import { MusicProvider } from "@/components/MusicProvider"
-import { ProjectFormProvider } from "@/components/ProjectFormProvider"
-
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata = {
-  title: "Kishore Jena Creation | CAYA AI",
-  description: "Your personal AI assistant with media, voice, and smart logic.",
-    generator: 'v0.app'
+export const metadata: Metadata = {
+  title: "SAKSHAM ~ The Fourth Edition",
+  description: "A premium technical event experience with cutting-edge innovations",
+  generator: "v0.app",
+  icons: {
+    icon: [
+      {
+        url: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/icon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: "/apple-icon.png",
+  },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AuthProvider>
-            <NotificationProvider>
-              <MusicProvider>
-                <ProjectFormProvider>
-                  <Header /> {/* ✅ Now visible on all pages */}
-                  <main>{children}</main>
-                  <Footer /> {/* ✅ Footer always visible */}
-                </ProjectFormProvider>
-              </MusicProvider>
-            </NotificationProvider>
-          </AuthProvider>
-        </ThemeProvider>
+      <body className={`font-sans antialiased`}>
+        {children}
+        <Analytics />
       </body>
     </html>
   )

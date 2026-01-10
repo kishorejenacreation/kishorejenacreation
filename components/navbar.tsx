@@ -18,7 +18,7 @@ export function Navbar({ onNavClick }: NavbarProps) {
         <div className="flex justify-between items-center">
           <div className="relative">
   <img
-    src="https://image2url.com/r2/bucket2/images/1767931459065-e9acd32f-c041-4e87-acad-68fbfd3127c2.png"
+    src="https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png"
     alt="SAKSHAM Logo"
     className="
       w-32 h-auto

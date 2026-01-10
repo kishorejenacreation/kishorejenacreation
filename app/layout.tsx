@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
+        url: "/icon-light-32x32.png",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "https://image2url.com/r2/bucket2/images/1768065567268-cc462617-428d-4213-af07-c21f9788b3da.png",
+        url: "/icon-dark-32x32.png",
         media: "(prefers-color-scheme: dark)",
       },
       {
